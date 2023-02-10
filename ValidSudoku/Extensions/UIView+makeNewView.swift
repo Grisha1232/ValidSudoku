@@ -1,0 +1,156 @@
+//
+//  UIView+makeLabelsWithSwitcher.swift
+//  ValidSudoku
+//
+//  Created by Григорий Селезнев on 1/30/23.
+//
+
+import UIKit
+
+extension UIView {
+    
+    static func makeLabelwithSwitcher(title str: String, description: String, target: Any?, selector: Selector, value: Bool) -> UIView {
+        let mainView = UIView()
+        let settingView = UIView()
+        let switcher = UISwitch()
+        let labelSetting = UILabel()
+        let descriptionLabel = UILabel()
+        
+        mainView.addSubview(settingView)
+        settingView.addSubview(switcher)
+        settingView.addSubview(labelSetting)
+        mainView.addSubview(descriptionLabel)
+        
+        
+        settingView.layer.borderWidth = 0.5
+        settingView.layer.borderColor = CGColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        
+        labelSetting.text = str
+        labelSetting.pin(to: settingView, [.left: 16, .top: 5, .bottom: 5])
+        
+        SettingsModel.appendTo(content: switcher)
+        switcher.isOn = value
+        switcher.onTintColor = SettingsModel.getMainColor()
+        switcher.pin(to: settingView, [.top: 5, .bottom: 5, .right: 16])
+        switcher.setWidth(60)
+        switcher.addTarget(target, action: selector, for: .valueChanged)
+        
+        descriptionLabel.text = description
+        descriptionLabel.textColor = .secondaryLabel
+        descriptionLabel.numberOfLines = 0
+        descriptionLabel.font = .systemFont(ofSize: 12)
+        
+        settingView.backgroundColor = .white
+        settingView.setHeight(40)
+        
+        settingView.pin(to: mainView, [.top, .right, .left])
+        
+        descriptionLabel.pin(to: mainView, [.bottom: 0, .right: 5, .left: 10])
+        descriptionLabel.pinTop(to: settingView.bottomAnchor)
+        
+        return mainView
+    }
+    
+    static func makeColorView(target: Any?, selector: Selector) -> UIView {
+        let view = UIView()
+        let tileView = UIView()
+        let colorsStackView = UIStackView()
+        let textLabel = UILabel()
+        let descriptionLabel = UILabel()
+        
+        
+        view.addSubview(tileView)
+        view.addSubview(descriptionLabel)
+        
+        tileView.addSubview(textLabel)
+        tileView.addSubview(colorsStackView)
+        
+        tileView.backgroundColor = .white
+        tileView.layer.borderWidth = 0.5
+        tileView.layer.borderColor = CGColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        tileView.pin(to: view, [.left, .right, .top])
+        
+        descriptionLabel.text = "Sets the default color of the app"
+        descriptionLabel.textColor = .secondaryLabel
+        descriptionLabel.numberOfLines = 0
+        descriptionLabel.font = .systemFont(ofSize: 12)
+        descriptionLabel.pin(to: view, [.left: 10, .right: 5, .bottom: 0])
+        descriptionLabel.pinTop(to: tileView.bottomAnchor)
+        
+        textLabel.text = "Change main color: "
+        textLabel.pin(to: tileView, [.right: 0, .left: 16, .top: 16])
+        
+        let blueBtn = UIButton.makeNewColorButton(color: .systemBlue)
+        blueBtn.addTarget(target, action: selector, for: .touchUpInside)
+        let cyanBtn = UIButton.makeNewColorButton(color: .systemCyan)
+        cyanBtn.addTarget(target, action: selector, for: .touchUpInside)
+        let orangeBtn = UIButton.makeNewColorButton(color: .systemOrange)
+        orangeBtn.addTarget(target, action: selector, for: .touchUpInside)
+        let purpleBtn = UIButton.makeNewColorButton(color: .systemPurple)
+        purpleBtn.addTarget(target, action: selector, for: .touchUpInside)
+        let greenBtn = UIButton.makeNewColorButton(color: .systemGreen)
+        greenBtn.addTarget(target, action: selector, for: .touchUpInside)
+        
+        colorsStackView.addArrangedSubview(blueBtn)
+        colorsStackView.addArrangedSubview(cyanBtn)
+        colorsStackView.addArrangedSubview(orangeBtn)
+        colorsStackView.addArrangedSubview(purpleBtn)
+        colorsStackView.addArrangedSubview(greenBtn)
+        colorsStackView.axis = .horizontal
+        colorsStackView.distribution = .equalSpacing
+        colorsStackView.alignment = .center
+        
+        colorsStackView.pin(to: tileView, [.right: 32, .left: 32, .bottom: 16])
+        colorsStackView.pinTop(to: textLabel.bottomAnchor, 16)
+        colorsStackView.setHeight(30)
+        
+        return view
+    }
+    
+    static func makeStatView(title: String, subTitles: [String]) -> UIView {
+        let view = UIView()
+        let titleLabel = UILabel()
+        let SVStats = UIStackView()
+        
+        view.addSubview(titleLabel)
+        view.addSubview(SVStats)
+        
+        titleLabel.text = title
+        titleLabel.font = .systemFont(ofSize: 27)
+        titleLabel.pin(to: view, [.top: 0, .left: 32, .right: 0])
+        
+        
+        
+        SVStats.axis = .vertical
+        SVStats.spacing = 6
+        SVStats.pin(to: view, [.right: 16, .left: 16])
+        SVStats.pinTop(to: titleLabel.bottomAnchor, 16)
+        
+        for subTitle in subTitles {
+            let statView = UIView()
+            let subTitleLabel = UILabel()
+            let statLabel = UILabel()
+            
+            statView.addSubview(subTitleLabel)
+            statView.addSubview(statLabel)
+            
+            subTitleLabel.text = subTitle
+            subTitleLabel.textAlignment = .right
+            subTitleLabel.pin(to: statView, [.left: 32, .top: 16, .bottom: 16])
+            subTitleLabel.font = .systemFont(ofSize: 16)
+            
+            statLabel.text = "0"
+            statLabel.textAlignment = .right
+            statLabel.pin(to: statView, [.right: 32, .top: 16, .bottom: 16])
+            statLabel.font = .systemFont(ofSize: 20)
+            
+            statView.layer.cornerRadius = 25
+            statView.backgroundColor = .white
+            statView.setHeight(50)
+            
+            SVStats.addArrangedSubview(statView)
+        }
+        
+        return view
+    }
+}
