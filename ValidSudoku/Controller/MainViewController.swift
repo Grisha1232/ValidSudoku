@@ -6,10 +6,12 @@
 //
 
 import UIKit
-import CoreData
 
+// MARK: - MainViewController
 class MainViewController: UIViewController, ChangedColorProtocol {
     
+    
+    // MARK: - Variables
     let continueGameButton = UIButton.makeNewButton(title: "Continue")
     let newGameButton = UIButton.makeNewButton(title: "New Game")
     let levelGameButtons = UIStackView()
@@ -42,6 +44,7 @@ class MainViewController: UIViewController, ChangedColorProtocol {
         setupLevelGameButtons()
     }
     
+    /// Set the profile and setting button and title
     private func setupToolBar() {
         let settingButton = UIBarButtonItem(
             image: UIImage(systemName: "gearshape.fill"),
@@ -64,6 +67,7 @@ class MainViewController: UIViewController, ChangedColorProtocol {
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: SettingsModel.isDarkMode() ? UIColor.white : UIColor.darkText]
     }
     
+    /// Set the "new game" button
     private func setupButtonNewGame() {
         view.addSubview(newGameButton)
         newGameButton.pin(to: view, [.left: 16, .right: 16])
@@ -71,6 +75,7 @@ class MainViewController: UIViewController, ChangedColorProtocol {
         newGameButton.addTarget(self, action: #selector(tappedNewGameButton(_:)), for: .touchUpInside)
     }
     
+    /// Set the levels buttons that apears after "new game" button tapped
     private func setupLevelGameButtons() {
         view.addSubview(levelGameButtons)
         let easyButton = UIButton.makeNewButton(title: "Easy")
@@ -92,6 +97,7 @@ class MainViewController: UIViewController, ChangedColorProtocol {
         levelGameButtons.spacing = 16
     }
     
+    /// Set the "continue" button
     private func setupButtonContinue() {
         view.addSubview(continueGameButton)
         continueGameButton.pin(to: view, [.left: 16, .right: 16])

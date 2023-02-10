@@ -7,10 +7,16 @@
 
 import UIKit
 
+// MARK: - ProfileViewController
 class ProfileViewController: UIViewController {
     
+    
+    // MARK: - Variables
+    /// ScrollView for scrolling the stats
+    /// ScrollView contains the statsStackView
     private let scrollView = UIScrollView()
     private let statsStackView = UIStackView()
+    /// StackView on the top of the screen
     private let SVFilterButtons = UIStackView()
     
     override func viewDidLoad() {
@@ -18,6 +24,7 @@ class ProfileViewController: UIViewController {
         setupUI()
     }
     
+    // MARK: - Setup UI
     private func setupUI() {
         view.backgroundColor = .systemBackground
         setupToolBar()
@@ -25,6 +32,7 @@ class ProfileViewController: UIViewController {
         setupStatsView()
     }
     
+    /// Set the back button
     private func setupToolBar() {
         let backButton = UIBarButtonItem(
             image: UIImage(systemName: "arrow.backward"),
@@ -37,6 +45,7 @@ class ProfileViewController: UIViewController {
         navigationItem.title = "Profile"
     }
     
+    /// Set the buttons filters on the top of the screen
     private func setupSVFilterButtons() {
         view.addSubview(SVFilterButtons)
         let easyButtonFilter = UIButton.makeStackViewButton(levelFilter: "easy")
@@ -56,6 +65,7 @@ class ProfileViewController: UIViewController {
         SVFilterButtons.pinTop(to: view.safeAreaLayoutGuide.topAnchor, 16)
     }
     
+    /// Set stats view
     private func setupStatsView() {
         view.addSubview(scrollView)
         scrollView.delegate = self
@@ -95,7 +105,7 @@ class ProfileViewController: UIViewController {
     }
     
     
-    
+    // MARK: - @objc functions
     @objc private func easyButtonTapped(_ sender: UIButton) {
         
     }

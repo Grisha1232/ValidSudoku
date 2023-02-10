@@ -7,14 +7,20 @@
 
 import UIKit
 
-final class GameFieldCell: UICollectionViewCell {
-    static let reuseIdentifier = "GameFieldCell"
-    public var delegateTap: CellTappedProtocol?
-    public var delegateSetNumber: setNumbersProtocol?
+// MARK: - Game field square
+final class GameFieldSquare: UICollectionViewCell {
     
+    // MARK: - Variables
+    /// identifier for cell
+    public static let reuseIdentifier = "GameFieldCell"
+    /// delegate for processing tap in the cell
+    public var delegateTap: CellTappedProtocol?
+    /// delegate for setting number after cell appear on the screen
+    public var delegateSetNumber: setNumbersProtocol?
+    /// cells in the squares
     internal let collectionViewCells = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     
-    
+    // MARK: - init()
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
@@ -25,6 +31,7 @@ final class GameFieldCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - setup UI
     private func setupView() {
         layer.borderColor = CGColor(red: 0, green: 0, blue: 0, alpha: 0.5)
         layer.borderWidth = 0.5
@@ -40,7 +47,8 @@ final class GameFieldCell: UICollectionViewCell {
     
 }
 
-extension GameFieldCell: UICollectionViewDataSource {
+// MARK: - extensions
+extension GameFieldSquare: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         3
     }
@@ -55,7 +63,7 @@ extension GameFieldCell: UICollectionViewDataSource {
     
 }
 
-extension GameFieldCell: UICollectionViewDelegate {
+extension GameFieldSquare: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         delegateSetNumber?.setNumber(collectionView: collectionView, cell: cell as? cellWithNumber ?? cellWithNumber(), indexPathWithNumb: indexPath, cellInField: self)
@@ -66,7 +74,7 @@ extension GameFieldCell: UICollectionViewDelegate {
     }
 }
 
-extension GameFieldCell: UICollectionViewDelegateFlowLayout {
+extension GameFieldSquare: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         CGSize(width: self.frame.width / 3, height: self.frame.height / 3)
     }

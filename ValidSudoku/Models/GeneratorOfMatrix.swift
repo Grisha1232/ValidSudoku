@@ -6,7 +6,8 @@
 //
 
 
-
+// MARK: - Generator of matrix
+/// Generator of matrix for sudoku field
 class GeneratorOfMatrix {
     
     private static let defaultMatrix: [[Int]] = [[1, 2, 3, 4, 5, 6, 7, 8, 9],
@@ -20,12 +21,14 @@ class GeneratorOfMatrix {
                                                 [9, 1, 2, 3, 4, 5, 6, 7, 8]]
     private static var matrix: [[Int]] = defaultMatrix
 
+    /// get answer matrix (call it before calling function 'getMatrix(level: String)')
     public static func getAnswerMatrix() -> [[Int]] {
         matrix = defaultMatrix
         mixMatrixUp()
         return matrix
     }
     
+    /// get matrix for sudoku with specific level
     public static func getMatrix(level: String) -> [[Int]] {
         let solver = SudokuSolver(matrix: matrix)
         let amountOfHints: Int
@@ -42,6 +45,7 @@ class GeneratorOfMatrix {
         return matrix
     }
     
+    /// return: matrix [9x9] filled with zeros
     private static func getZeroMatrix() -> [[Int]] {
         var grid: [[Int]] = []
         for _ in 0..<9 {
@@ -50,7 +54,7 @@ class GeneratorOfMatrix {
         return grid
     }
     
-    
+    /// Mix up the matrix by using: swapRows(), swapColumns(), swapRowsArea(), swapColumnsArea(), transpose()
     private static func mixMatrixUp() {
         let funcs = [swapRows, swapColumns, swapRowsArea, swapColumnsArea, transpose]
         for _ in 0...25 {
@@ -58,7 +62,7 @@ class GeneratorOfMatrix {
         }
     }
     
-    // Swaps rows of the matrix
+    /// Swaps rows of the matrix
     private static func swapRows() {
         let area = Int.random(in: 0...2)
         let line1 = Int.random(in: 0..<3)
@@ -77,14 +81,14 @@ class GeneratorOfMatrix {
         }
     }
     
-    // Swaps columns of the matrix
+    /// Swaps columns of the matrix
     private static func swapColumns() {
         transpose()
         swapRows()
         transpose()
     }
     
-    // Swaps rows areas of the matrix
+    /// Swaps rows areas of the matrix
     private static func swapRowsArea() {
         let i = Int.random(in: 0...2)
         var j = Int.random(in: 0...2)
@@ -104,7 +108,7 @@ class GeneratorOfMatrix {
         transpose()
     }
     
-    // Transpose the matrix
+    /// Transpose the matrix
     private static func transpose() {
         let copy = matrix
         for i in 0..<9 {

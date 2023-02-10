@@ -7,22 +7,34 @@
 
 import UIKit
 
+// MARK: - GameViewController
 class GameViewController: UIViewController, ChangedColorProtocol, SelectionProtocol {
     
+    
+    // MARK: - Variables
+    /// decription on the top of the game field
     private let descriptionStackView = UIStackView()
     private var timer: Timer?
     private var seconds: Int = 0
     private var levelGame: String
+    private var mistakes: Int = 0
+    
+    /// Game field view
     private var gameField: GameFieldView
+    
+    /// StackView with buttons for tools
     private let toolsStackView = UIStackView()
+    // StackView with buttons for digits
     private let lineDigitsStackView = UIStackView()
     private var digitsCount: [Int] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
     
+    /// Selected states
     private var selectedRow: Int = 0
     private var selectedCol: Int = 0
-    private var selectedSquare: GameFieldCell? = nil
+    private var selectedSquare: GameFieldSquare? = nil
     private var selectedPreFilled: Bool = true
     
+    // MARK: - init()
     init(levelGame: String?) {
         self.levelGame = levelGame ?? ""
         gameField = GameFieldView(levelGame: self.levelGame)
@@ -39,13 +51,16 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         setupUI()
     }
     
-    internal func setRowAndColumnOfSelection(_ gameSquare: GameFieldCell, _ row: Int, _ col: Int, _ preFilled: Bool) {
+    // MARK: - Control functions
+    /// Set the state fof the selection
+    internal func setRowAndColumnOfSelection(_ gameSquare: GameFieldSquare, _ row: Int, _ col: Int, _ preFilled: Bool) {
         selectedRow = row
         selectedCol = col
         selectedSquare = gameSquare
         selectedPreFilled = preFilled
     }
     
+    /// Protocol function for changing color after setting it in "SettingsViewController"
     internal func changeColor() {
         for navItem in navigationItem.leftBarButtonItems! {
             navItem.tintColor = SettingsModel.getMainColor()
@@ -59,6 +74,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         gameField.refreshFromSelection()
     }
     
+    
     // MARK: - Setup UI functions
     private func setupUI() {
         view.backgroundColor = .white
@@ -69,6 +85,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         setupDescriptions()
     }
     
+    /// Set back and setting buttons and title
     private func setupBarButtons() {
         let settingButton = UIBarButtonItem(
             image: UIImage(systemName: "gearshape.fill"),
@@ -90,6 +107,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         navigationItem.title = "Valid Sudoku"
     }
     
+    /// Set description on the top of the game field
     private func setupDescriptions() {
         view.addSubview(descriptionStackView)
         
@@ -124,6 +142,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         descriptionStackView.setHeight(45)
     }
     
+    /// Set game field View
     private func setupGameField() {
         digitsCount = gameField.countDigitInMatrix()
         gameField.delegate = self
@@ -133,6 +152,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         gameField.setHeight(view.frame.height / 2)
     }
     
+    /// Set tools for interating with game field
     private func setupTools() {
         view.addSubview(toolsStackView)
         let tools: [UIImage?] = [.init(systemName: "arrow.uturn.left"), .init(systemName: "delete.left"), .init(systemName: "pencil"), .init(systemName: "lightbulb")]
@@ -181,6 +201,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         toolsStackView.setHeight(60)
     }
     
+    /// Set digit buttons for filling the cells in the field
     private func setupLineDigits() {
         view.addSubview(lineDigitsStackView)
         for i in 0..<9 {
@@ -201,6 +222,8 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         lineDigitsStackView.setHeight(60)
     }
     
+    
+    // MARK: - @objc functions
     @objc private func updateTimeLabel() {
         seconds += 1
         let label = descriptionStackView.subviews[2] as! UILabel

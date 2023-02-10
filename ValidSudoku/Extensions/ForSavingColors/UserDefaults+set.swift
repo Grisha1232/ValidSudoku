@@ -21,13 +21,33 @@ extension UserDefaults {
         data(forKey: defaultName)?.color
     }
     
-    var mainColor: UIColor? {
+    public var mainColor: UIColor? {
         get { color(forKey: "mainColor") }
         set { set(newValue, forKey: "mainColor") }
     }
     
-    var isDarkMode: Bool {
+    public var isDarkMode: Bool {
         get { bool(forKey: "darkMode") }
         set { set(newValue, forKey: "darkMode")}
+    }
+    
+    public var isMistakesLimitSet: Bool {
+        get { bool(forKey: "mistakesLimit") }
+        set { set(newValue, forKey: "mistakesLimit") }
+    }
+    
+    public var isMistakesIndicates: Bool {
+        get { bool(forKey: "mistakesIndicate") }
+        set { set(newValue, forKey: "mistakesIndicate") }
+    }
+    
+    public var isAutoRemoveNoteOn: Bool {
+        get { bool(forKey: "autoRemoveNote") }
+        set { set(newValue, forKey: "autoRemoveNote") }
+    }
+    
+    public var isHighlightingOn: Bool {
+        get { bool(forKey: "highlightSameNumber") }
+        set { set(newValue, forKey: "highlightSameNumber") }
     }
 }

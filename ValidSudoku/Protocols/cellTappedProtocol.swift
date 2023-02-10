@@ -8,5 +8,5 @@
 import UIKit
 
 protocol CellTappedProtocol {
-    func tappedAtCell(fieldCellSelected: GameFieldCell, indexPathSelected indexPath: IndexPath)
+    func tappedAtCell(fieldCellSelected: GameFieldSquare, indexPathSelected indexPath: IndexPath)
 }

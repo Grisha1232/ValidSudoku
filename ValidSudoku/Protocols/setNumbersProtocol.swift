@@ -8,5 +8,5 @@
 import UIKit
 
 protocol setNumbersProtocol {
-    func setNumber(collectionView: UICollectionView, cell: cellWithNumber, indexPathWithNumb: IndexPath, cellInField: GameFieldCell)
+    func setNumber(collectionView: UICollectionView, cell: cellWithNumber, indexPathWithNumb: IndexPath, cellInField: GameFieldSquare)
 }
