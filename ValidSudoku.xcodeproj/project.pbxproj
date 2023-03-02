@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C32CB4A829B104F900EBF0C0 /* GameOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32CB4A729B104F900EBF0C0 /* GameOverView.swift */; };
 		C360DE0F298B248700D5A192 /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C360DE0E298B248700D5A192 /* SettingsModel.swift */; };
 		C360DE11298B26A800D5A192 /* UIColor+extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C360DE10298B26A800D5A192 /* UIColor+extentions.swift */; };
 		C360DE13298B26C700D5A192 /* Data+extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = C360DE12298B26C700D5A192 /* Data+extention.swift */; };
@@ -37,6 +38,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C32CB4A729B104F900EBF0C0 /* GameOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverView.swift; sourceTree = "<group>"; };
 		C360DE0E298B248700D5A192 /* SettingsModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
 		C360DE10298B26A800D5A192 /* UIColor+extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+extentions.swift"; sourceTree = "<group>"; };
 		C360DE12298B26C700D5A192 /* Data+extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+extention.swift"; sourceTree = "<group>"; };
@@ -79,7 +81,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		C360DE16298B26FB00D5A192 /* ForSavingColors */ = {
+		C360DE16298B26FB00D5A192 /* ForSaving */ = {
 			isa = PBXGroup;
 			children = (
 				C360DE10298B26A800D5A192 /* UIColor+extentions.swift */,
@@ -87,7 +89,7 @@
 				C360DE14298B26DD00D5A192 /* Numeric+extension.swift */,
 				C360DE17298B271D00D5A192 /* UserDefaults+set.swift */,
 			);
-			path = ForSavingColors;
+			path = ForSaving;
 			sourceTree = "<group>";
 		};
 		C382B7C52975411B002A07AB = {
@@ -139,6 +141,7 @@
 			isa = PBXGroup;
 			children = (
 				C37806B829801C8B000947EB /* GameFieldView.swift */,
+				C32CB4A729B104F900EBF0C0 /* GameOverView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -161,7 +164,7 @@
 				C382B7F229754714002A07AB /* UIView+pins.swift */,
 				C37806B6298012EE000947EB /* UIButton+makeNewButton.swift */,
 				C39C637B2987DECA00937D22 /* UIView+makeNewView.swift */,
-				C360DE16298B26FB00D5A192 /* ForSavingColors */,
+				C360DE16298B26FB00D5A192 /* ForSaving */,
 				C360DE1B298B33B200D5A192 /* UISwitcher+changeColor.swift */,
 			);
 			path = Extensions;
@@ -272,6 +275,7 @@
 				C360DE11298B26A800D5A192 /* UIColor+extentions.swift in Sources */,
 				C360DE13298B26C700D5A192 /* Data+extention.swift in Sources */,
 				C382B7F0297545CF002A07AB /* SettingsViewController.swift in Sources */,
+				C32CB4A829B104F900EBF0C0 /* GameOverView.swift in Sources */,
 				C367FC38298CEB8400516A1F /* GeneratorOfMatrix.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

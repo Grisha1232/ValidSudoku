@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 // MARK: - GameViewController
 class GameViewController: UIViewController, ChangedColorProtocol, SelectionProtocol {
@@ -15,7 +16,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
     /// decription on the top of the game field
     private let descriptionStackView = UIStackView()
     private var timer: Timer?
-    private var seconds: Int = 0
+    private var seconds: Float = 0
     private var levelGame: String
     private var mistakes: Int = 0
     
@@ -74,6 +75,12 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         gameField.refreshFromSelection()
     }
     
+    internal func countUpMistakes() {
+        mistakes += 1
+        let label = self.descriptionStackView.subviews[1] as! UILabel
+        label.text = "Mistakes: " + String(mistakes)
+    }
+    
     
     // MARK: - Setup UI functions
     private func setupUI() {
@@ -117,25 +124,25 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         
         let levelLabel = UILabel()
         levelLabel.text = levelGame
-        levelLabel.font = .systemFont(ofSize: view.frame.width / 20)
+        levelLabel.font = .systemFont(ofSize: view.frame.width / 23)
         levelLabel.textAlignment = .left
         descriptionStackView.addArrangedSubview(levelLabel)
-        levelLabel.setWidth(60)
+        levelLabel.setWidth((view.frame.width - 34) / 3)
         
         let mistakesCount = UILabel()
-        mistakesCount.text = "Mistakes: 999"
-        mistakesCount.font = .systemFont(ofSize: view.frame.width / 20)
+        mistakesCount.text = "Mistakes: 0"
+        mistakesCount.font = .systemFont(ofSize: view.frame.width / 23)
         mistakesCount.textAlignment = .center
         descriptionStackView.addArrangedSubview(mistakesCount)
-        mistakesCount.setWidth(150)
+        mistakesCount.setWidth((view.frame.width - 34) / 3)
         
-        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimeLabel), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(updateTimeLabel), userInfo: nil, repeats: true)
         let timerLabel = UILabel()
-        timerLabel.text = "time:  0:00"
-        timerLabel.font = .systemFont(ofSize: view.frame.width / 20)
+        timerLabel.text = "time: 0:00"
+        timerLabel.font = .systemFont(ofSize: view.frame.width / 23)
         timerLabel.textAlignment = .right
         descriptionStackView.addArrangedSubview(timerLabel)
-        timerLabel.setWidth(120)
+        timerLabel.setWidth((view.frame.width - 34) / 3)
         
         descriptionStackView.pin(to: view, [.left: 17, .right: 17])
         descriptionStackView.pinBottom(to: gameField.topAnchor)
@@ -174,6 +181,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
                 button.addTarget(self, action: #selector(eraseButtonTapped(_:)), for: .touchUpInside)
             } else if i == 2 {
                 toolLabel.text = "note"
+                button.addTarget(self, action: #selector(noteButtonTapped(_:)), for: .touchUpInside)
             } else {
                 toolLabel.text = "hint"
             }
@@ -222,37 +230,92 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         lineDigitsStackView.setHeight(60)
     }
     
+    private func switchLineDigits() {
+        if (SettingsModel.isNoteOn()) {
+            for numBtn in lineDigitsStackView.subviews {
+                let numb = numBtn as! UIButton
+                numb.setTitleColor(.label, for: .normal)
+                numb.isEnabled = true
+            }
+        } else {
+            for numBtn in lineDigitsStackView.subviews {
+                (numBtn as! UIButton).setTitleColor(SettingsModel.getMainColor(), for: .normal)
+            }
+            for i in 0...8 {
+                if (digitsCount[i] == 9) {
+                    (lineDigitsStackView.subviews[i] as! UIButton).isEnabled = false
+                    (lineDigitsStackView.subviews[i] as! UIButton).setTitleColor(.white, for: .normal)
+                }
+            }
+        }
+    }
+    
+    private func gameOver() {
+        navigationController?.present(GameOverView(), animated: true, completion: {() -> Void in
+            self.navigationController?.popViewController(animated: true)
+        })
+    }
+    
     
     // MARK: - @objc functions
     @objc private func updateTimeLabel() {
-        seconds += 1
-        let label = descriptionStackView.subviews[2] as! UILabel
-        let minutes: Int = seconds / 60
-        let sec = seconds % 60
-        label.text = "time:  " + String(minutes) + (seconds % 2 == 1 ? ":" : " ") + (sec / 10 == 0 ? "0" + String(sec) : String(sec))
+        seconds += 0.5
+        if (Float(Int(seconds)) - seconds == 0) {
+            let secs = Int(seconds)
+            let label = self.descriptionStackView.subviews[2] as! UILabel
+            let minutes: Int = secs / 60
+            let sec = secs % 60
+            label.text = "time: " + String(minutes) + ":" + (sec / 10 == 0 ? "0" + String(sec) : String(sec))
+        } else {
+            let secs = Int(seconds)
+            let label = self.descriptionStackView.subviews[2] as! UILabel
+            let minutes: Int = secs / 60
+            let sec = secs % 60
+            label.text = "time: " + String(minutes) + " " + (sec / 10 == 0 ? "0" + String(sec) : String(sec))
+        }
     }
     
     @objc private func eraseButtonTapped(_ sender: UIButton) {
         if(!selectedPreFilled) {
-            let cellWithNumber = selectedSquare!.collectionViewCells.cellForItem(at: IndexPath(row: selectedCol % 3, section: selectedRow % 3)) as! cellWithNumber
-            let index = Int(cellWithNumber.getNumber()) ?? -1
-            if (index != -1) {
-                digitsCount[index - 1] -= 1
-                (lineDigitsStackView.subviews[index - 1] as! UIButton).isEnabled = true
-                (lineDigitsStackView.subviews[index - 1] as! UIButton).setTitleColor(SettingsModel.getMainColor(), for: .normal)
-            }
             gameField.setFieldMatrix(gameSquare: selectedSquare!, row: selectedRow, col: selectedCol, num: 0)
+            digitsCount = gameField.countDigitInMatrix()
+            for i in 0...8 {
+                if (digitsCount[i] == 9) {
+                    (lineDigitsStackView.subviews[i] as! UIButton).isEnabled = false
+                    (lineDigitsStackView.subviews[i] as! UIButton).setTitleColor(.white, for: .normal)
+                } else {
+                    (lineDigitsStackView.subviews[i] as! UIButton).isEnabled = true
+                    (lineDigitsStackView.subviews[i] as! UIButton).setTitleColor(SettingsModel.isNoteOn() ? .label : SettingsModel.getMainColor(), for: .normal)
+                }
+            }
         }
     }
     
+    @objc private func noteButtonTapped(_ sender: UIButton) {
+        SettingsModel.switchNote()
+        switchLineDigits()
+    }
+    
     @objc private func numberTapped(_ sender: UIButton) {
-        if (!selectedPreFilled){
-            digitsCount[sender.tag - 1] += 1
+        if (!selectedPreFilled && !SettingsModel.isNoteOn()){
             gameField.setFieldMatrix(gameSquare: selectedSquare!, row: selectedRow, col: selectedCol, num: sender.tag)
-            if (digitsCount[sender.tag - 1] == 9) {
-                sender.isEnabled = false
-                sender.setTitleColor(.white, for: .normal)
+            digitsCount = gameField.countDigitInMatrix()
+            var count = 0
+            for i in 0...8 {
+                if (digitsCount[i] == 9) {
+                    count += 1
+                    (lineDigitsStackView.subviews[i] as! UIButton).isEnabled = false
+                    (lineDigitsStackView.subviews[i] as! UIButton).setTitleColor(.white, for: .normal)
+                } else {
+                    (lineDigitsStackView.subviews[i] as! UIButton).isEnabled = true
+                    (lineDigitsStackView.subviews[i] as! UIButton).setTitleColor(SettingsModel.getMainColor(), for: .normal)
+                }
             }
+            if (count == 9 && gameField.isGameOver()) {
+                gameOver()
+            }
+        } else {
+            gameField.setFieldMatrix(gameSquare: selectedSquare!, row: selectedRow, col: selectedCol, num: sender.tag)
         }
     }
     
