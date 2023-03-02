@@ -51,25 +51,48 @@ final class GameFieldView: UIView, CellTappedProtocol, setNumbersProtocol {
         return digits
     }
     
+    public func isGameOver() -> Bool {
+        for i in 0...8 {
+            for j in 0...8 {
+                if (fieldMatrix[i][j] != answerMatrix[i][j]) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+    
     /// Set number to the specific cell of the field matrix
     internal func setFieldMatrix(gameSquare: GameFieldSquare, row: Int, col: Int, num: Int) {
-        fieldMatrix[row][col] = num
-        solver.setMatrix(matrix: fieldMatrix)
-        let cellWithNumb = gameSquare.collectionViewCells.cellForItem(at: IndexPath(row: col % 3, section: row % 3)) as! cellWithNumber
-        let beforeNumber = Int(cellWithNumb.getNumber()) ?? 0
-        cellWithNumb.setNumberLabel(numb: num)
-        refreshFromSelection()
-        if (num == 0 || solver.isValidPlaceForNum(row: row, col: col, num: num)) {
-            cellWithNumb.setIsCorrectNumb(true)
-            refreshFromIncorrectSelection(gameSquare, row, col, beforeNumber)
+        if (!SettingsModel.isNoteOn()) {
+            fieldMatrix[row][col] = num
+            solver.setMatrix(matrix: fieldMatrix)
+            let cellWithNumb = gameSquare.collectionViewCells.cellForItem(at: IndexPath(row: col % 3, section: row % 3)) as! cellWithNumber
+            let beforeNumber = Int(cellWithNumb.getNumber()) ?? 0
+            cellWithNumb.setNumberLabel(numb: num)
+            refreshFromSelection()
+            if (beforeNumber != num || num == 0 || solver.isValidPlaceForNum(row: row, col: col, num: num)) {
+                cellWithNumb.setIsCorrectNumb(true)
+                refreshFromIncorrectSelection(gameSquare, row, col, beforeNumber)
+            } else {
+                highlightIncorrectNumber(gameSquare, row, col, num)
+            }
+            
+            if (!isEqualWithAnswerMatrix()) {
+                delegate?.countUpMistakes()
+                highlightIncorrectNumber(gameSquare, row, col, num)
+            }
+            tappedAtCell(fieldCellSelected: gameSquare, indexPathSelected: IndexPath(row: col % 3, section: row % 3))
         } else {
-            highlightIncorrectNumber(gameSquare, row, col, num)
+            let cellWithNumb = gameSquare.collectionViewCells.cellForItem(at: IndexPath(row: col % 3, section: row % 3)) as! cellWithNumber
+            if (num == 0) {
+                let beforeNumber = Int(cellWithNumb.getNumber()) ?? 0
+                cellWithNumb.setIsCorrectNumb(true)
+                refreshFromIncorrectSelection(gameSquare, row, col, beforeNumber)
+            }
+            cellWithNumb.setNumberLabel(numb: num)
+            tappedAtCell(fieldCellSelected: gameSquare, indexPathSelected: IndexPath(row: col % 3, section: row % 3))
         }
-        
-        if (!isEqualWithAnswerMatrix()) {
-            highlightIncorrectNumber(gameSquare, row, col, num)
-        }
-        tappedAtCell(fieldCellSelected: gameSquare, indexPathSelected: IndexPath(row: col % 3, section: row % 3))
     }
     
     /// Protocol function set numbers to cells after showing cells on the screen

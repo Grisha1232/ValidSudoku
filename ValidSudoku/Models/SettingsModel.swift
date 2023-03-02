@@ -17,6 +17,15 @@ class SettingsModel {
         delegates.append(content)
     }
     
+    // MARK: - Settings in the game
+    private static var noteOn = false
+    public static func switchNote() {
+        noteOn.toggle()
+    }
+    public static func isNoteOn() -> Bool {
+        noteOn
+    }
+    
     // MARK: - Settings of the Sudoku
     /// get is it Mistakes limit on or not
     public static func isMistakesLimitSet() -> Bool {
