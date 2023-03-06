@@ -31,23 +31,54 @@ class SettingsViewController: UIViewController, ChangedColorProtocol {
     /// how to play ?
     private let howToPlayView = UIView()
     
+    private let isOpenedfromTheGame: Bool
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         SettingsModel.appendTo(content: self)
         setupUI()
     }
     
+    init(isOpenedFromTheGame: Bool) {
+        self.isOpenedfromTheGame = isOpenedFromTheGame
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     /// protocol function for changing theme after tapping the button
     internal func changeColor() {
+        view.backgroundColor = SettingsModel.getMainBackgroundColor()
         for itemBtn in navigationItem.leftBarButtonItems! {
             itemBtn.tintColor = SettingsModel.getMainColor()
         }
+        settingsView.backgroundColor = SettingsModel.getSecondaryBackgroundColor()
+        colorSchemeView.backgroundColor = SettingsModel.getSecondaryBackgroundColor()
         colorSchemeBtn.setTitleColor(SettingsModel.getMainColor(), for: .normal)
+        settingsBtn.setTitleColor(SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel, for: .normal)
+        howToPlayBtn.setTitleColor(SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel, for: .normal)
+        
+        for view in settingsView.subviews {
+            view.subviews[0].backgroundColor = SettingsModel.getMainBackgroundColor()
+            (view.subviews[0].subviews[1] as! UILabel).textColor = SettingsModel.isDarkMode() ? .white : .label
+            (view.subviews[1] as! UILabel).textColor = SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel
+        }
+        
+        colorSchemeView.subviews[1].subviews[0].backgroundColor = SettingsModel.getMainBackgroundColor()
+        (colorSchemeView.subviews[1].subviews[0].subviews[1] as! UILabel).textColor = SettingsModel.isDarkMode() ? .white : .label
+        (colorSchemeView.subviews[1].subviews[1] as! UILabel).textColor = SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel
+        
+        (colorSchemeView.subviews[0].subviews[1] as! UILabel).textColor = SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel
+        colorSchemeView.subviews[0].subviews[0].backgroundColor = SettingsModel.getMainBackgroundColor()
+        (colorSchemeView.subviews[0].subviews[0].subviews[0] as! UILabel).textColor = SettingsModel.isDarkMode() ? .white : .label
+        
     }
     
     // MARK: - setup UI
     private func setupUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = SettingsModel.getMainBackgroundColor()
         navigationItem.title = "Settings"
         setupBarButton()
         // Switch between settings
@@ -102,7 +133,7 @@ class SettingsViewController: UIViewController, ChangedColorProtocol {
         
         colorSchemeBtn.tag = 1
         colorSchemeBtn.setTitle("Color Shceme", for: .normal)
-        colorSchemeBtn.setTitleColor(.secondaryLabel, for: .normal)
+        colorSchemeBtn.setTitleColor(SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel, for: .normal)
         colorSchemeBtn.backgroundColor = .none
         colorSchemeBtn.addTarget(self, action: #selector(tabButtonTapped(_:)), for: .touchUpInside)
         tabStackView.addArrangedSubview(colorSchemeBtn)
@@ -112,7 +143,7 @@ class SettingsViewController: UIViewController, ChangedColorProtocol {
         
         howToPlayBtn.tag = 2
         howToPlayBtn.setTitle("How to play?", for: .normal)
-        howToPlayBtn.setTitleColor(.secondaryLabel, for: .normal)
+        howToPlayBtn.setTitleColor(SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel, for: .normal)
         howToPlayBtn.backgroundColor = .none
         howToPlayBtn.addTarget(self, action: #selector(tabButtonTapped(_:)), for: .touchUpInside)
         tabStackView.addArrangedSubview(howToPlayBtn)
@@ -127,14 +158,23 @@ class SettingsViewController: UIViewController, ChangedColorProtocol {
     /// Set settings View
     private func setupSettingView() {
         view.addSubview(settingsView)
-        settingsView.backgroundColor = .secondarySystemBackground
+        settingsView.backgroundColor = SettingsModel.getSecondaryBackgroundColor()
         
         let mistakesLimit = UIView.makeLabelwithSwitcher(title: "Mistakes Limit", description: "set a limit on the number of mistakes to 3. After exeeding the limit, the game ends", target: self, selector: #selector(switcherMistakesLimitTapped(_:)), value: SettingsModel.isMistakesLimitSet())
         settingsView.addSubview(mistakesLimit)
+        if (isOpenedfromTheGame) {
+            (mistakesLimit.subviews[0].subviews[0] as! UISwitch).isEnabled = false
+        }
         mistakesLimit.pin(to: settingsView, [.top: 16, .right: 0, .left: 0])
         
         let indicateMistakes = UIView.makeLabelwithSwitcher(title: "Indicate mistakes", description: "indicates wether you made a mistake or not. if disabled, the mistakes will be shown after the game is over.", target: self, selector: #selector(switcherMistakesIndicateTapped(_:)), value: SettingsModel.isMistakesIndicates())
         settingsView.addSubview(indicateMistakes)
+        if (SettingsModel.isMistakesLimitSet()){
+            (indicateMistakes.subviews[0].subviews[0] as! UISwitch).isEnabled = false
+        }
+        if (isOpenedfromTheGame) {
+            (indicateMistakes.subviews[0].subviews[0] as! UISwitch).isEnabled = false
+        }
         indicateMistakes.pin(to: settingsView, [.right: 0, .left: 0])
         indicateMistakes.pinTop(to: mistakesLimit.bottomAnchor, 16)
         
@@ -156,8 +196,7 @@ class SettingsViewController: UIViewController, ChangedColorProtocol {
     private func setupColorSchemeView() {
         view.addSubview(colorSchemeView)
         colorSchemeView.isHidden = true
-        
-        colorSchemeView.backgroundColor = .secondarySystemBackground
+        colorSchemeView.backgroundColor = SettingsModel.getSecondaryBackgroundColor()
         
         let colorPallete = UIView.makeColorView(target: self, selector: #selector(colorButtonTapped(_:)))
         colorSchemeView.addSubview(colorPallete)
@@ -206,6 +245,19 @@ class SettingsViewController: UIViewController, ChangedColorProtocol {
     
     @objc private func switcherMistakesLimitTapped(_ sender: UISwitch) {
         SettingsModel.switchMistakesLimit()
+        print("\(SettingsModel.isMistakesLimitSet()) \(SettingsModel.isMistakesIndicates())")
+        if (SettingsModel.isMistakesLimitSet() && !SettingsModel.isMistakesIndicates()) {
+            (settingsView.subviews[1].subviews[0].subviews[0] as! UISwitch).setOn(true, animated: true)
+            (settingsView.subviews[1].subviews[0].subviews[0] as! UISwitch).isOn = true
+            SettingsModel.switchMistakesIndicate()
+        }
+        if (SettingsModel.isMistakesLimitSet() && SettingsModel.isMistakesIndicates()) {
+            (settingsView.subviews[1].subviews[0].subviews[0] as! UISwitch).isEnabled = false
+        }
+        
+        if (!SettingsModel.isMistakesLimitSet() && SettingsModel.isMistakesIndicates()) {
+            (settingsView.subviews[1].subviews[0].subviews[0] as! UISwitch).isEnabled = true
+        }
     }
     
     @objc private func switcherMistakesIndicateTapped(_ sender: UISwitch) {
@@ -228,19 +280,19 @@ class SettingsViewController: UIViewController, ChangedColorProtocol {
         switch sender.tag {
         case 0:
             settingsBtn.setTitleColor(SettingsModel.getMainColor(), for: .normal)
-            colorSchemeBtn.setTitleColor(.secondaryLabel, for: .normal)
-            howToPlayBtn.setTitleColor(.secondaryLabel, for: .normal)
+            colorSchemeBtn.setTitleColor(SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel, for: .normal)
+            howToPlayBtn.setTitleColor(SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel, for: .normal)
             navigationItem.title = "Settings"
             showSettings()
         case 1:
-            settingsBtn.setTitleColor(.secondaryLabel, for: .normal)
+            settingsBtn.setTitleColor(SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel, for: .normal)
             colorSchemeBtn.setTitleColor(SettingsModel.getMainColor(), for: .normal)
-            howToPlayBtn.setTitleColor(.secondaryLabel, for: .normal)
+            howToPlayBtn.setTitleColor(SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel, for: .normal)
             navigationItem.title = "Scheme"
             showColorScheme()
         default:
-            settingsBtn.setTitleColor(.secondaryLabel, for: .normal)
-            colorSchemeBtn.setTitleColor(.secondaryLabel, for: .normal)
+            settingsBtn.setTitleColor(SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel, for: .normal)
+            colorSchemeBtn.setTitleColor(SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel, for: .normal)
             howToPlayBtn.setTitleColor(SettingsModel.getMainColor(), for: .normal)
             navigationItem.title = "How to play?"
             showHowToPlaye()

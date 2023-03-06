@@ -57,7 +57,7 @@ class GeneratorOfMatrix {
     /// Mix up the matrix by using: swapRows(), swapColumns(), swapRowsArea(), swapColumnsArea(), transpose()
     private static func mixMatrixUp() {
         let funcs = [swapRows, swapColumns, swapRowsArea, swapColumnsArea, transpose]
-        for _ in 0...25 {
+        for _ in 0...50 {
             funcs.randomElement()!()
         }
     }

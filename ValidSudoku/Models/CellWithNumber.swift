@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - cell with number
-final class cellWithNumber: UICollectionViewCell {
+final class cellWithNumber: UICollectionViewCell, ChangedColorProtocol {
     
     // MARK: - Variables
     /// indentifier
@@ -31,6 +31,7 @@ final class cellWithNumber: UICollectionViewCell {
     // MARK: - init()
     override init(frame: CGRect) {
         super.init(frame: frame)
+        SettingsModel.appendTo(content: self)
         setupView()
     }
     
@@ -67,21 +68,38 @@ final class cellWithNumber: UICollectionViewCell {
         isCorrectNumb = val
     }
     
+    
+    internal func changeColor() {
+        if (isCorrectNumber()) {
+            backgroundColor = SettingsModel.getMainBackgroundColor()
+        }
+        layer.borderColor = SettingsModel.isDarkMode() ? CGColor(red: 1, green: 1, blue: 1, alpha: 0.5) : CGColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        if (preFilled) {
+            numberLabel.textColor = SettingsModel.isDarkMode() ? .white : .label
+        } else {
+            numberLabel.textColor = SettingsModel.getMainColor()
+        }
+        for i in 0...8 {
+            noteNumbersLabel[i].textColor = SettingsModel.isDarkMode() ? .white : .label
+        }
+    }
+    
     // MARK: - setup UI
     private func setupView() {
-        layer.borderColor = CGColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        layer.borderColor = SettingsModel.isDarkMode() ? CGColor(red: 1, green: 1, blue: 1, alpha: 0.5) : CGColor(red: 0, green: 0, blue: 0, alpha: 0.5)
         layer.borderWidth = 0.3
         addSubview(numberLabel)
-        backgroundColor = .red.withAlphaComponent(0)
+        backgroundColor = SettingsModel.getMainBackgroundColor()
         backgroundView?.alpha = 0;
         numberLabel.pin(to: self, [.right, .left, .bottom, .top])
-        numberLabel.textColor = .label
+        numberLabel.textColor = SettingsModel.isDarkMode() ? .white : .label
         numberLabel.textAlignment = .center
         numberLabel.text = "0"
         numberLabel.font = .systemFont(ofSize: self.frame.width / 2)
         for i in 0...8 {
             addSubview(noteNumbersLabel[i])
             noteNumbersLabel[i].text = String(i + 1);
+            noteNumbersLabel[i].textColor = SettingsModel.isDarkMode() ? .white : .label
             noteNumbersLabel[i].font = .systemFont(ofSize: self.frame.width / 3)
             noteNumbersLabel[i].isHidden = true
         }
@@ -131,13 +149,18 @@ final class cellWithNumber: UICollectionViewCell {
     }
     
     /// configure cell after appearing on the screen
-    public func configureNumber(numb: Int) {
-        if numb == 0 {
-            numberLabel.text = ""
-            preFilled = false
-        } else {
+    public func configureNumber(numb: Int, filled: Bool) {
+        if (filled) {
             preFilled = true
             numberLabel.text = String(numb)
+        } else {
+            preFilled = false
+            if (numb == 0) {
+                numberLabel.text = ""
+            } else {
+                numberLabel.text = String(numb)
+                numberLabel.textColor = SettingsModel.getMainColor()
+            }
         }
     }
     

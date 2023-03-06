@@ -20,6 +20,11 @@ final class GameFieldSquare: UICollectionViewCell {
     /// cells in the squares
     internal let collectionViewCells = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     
+    internal func changeColor() {
+        layer.borderColor = SettingsModel.isDarkMode() ? CGColor(red: 1, green: 1, blue: 1, alpha: 1) : CGColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        backgroundColor = SettingsModel.getMainBackgroundColor()
+    }
+    
     // MARK: - init()
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -33,9 +38,9 @@ final class GameFieldSquare: UICollectionViewCell {
     
     // MARK: - setup UI
     private func setupView() {
-        layer.borderColor = CGColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        layer.borderColor = SettingsModel.isDarkMode() ? CGColor(red: 1, green: 1, blue: 1, alpha: 1) : CGColor(red: 0, green: 0, blue: 0, alpha: 0.5)
         layer.borderWidth = 0.5
-        backgroundColor = .white
+        backgroundColor = SettingsModel.getMainBackgroundColor()
         collectionViewCells.dataSource = self
         collectionViewCells.delegate = self
         collectionViewCells.register(cellWithNumber.self, forCellWithReuseIdentifier: cellWithNumber.reuseIdentifier)

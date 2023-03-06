@@ -17,6 +17,15 @@ class SettingsModel {
         delegates.append(content)
     }
     
+    // MARK: - After game
+    /// func for saving the game state for cintinuing game in the future
+    public static func save(gameState: GameState?) {
+        UserDefaults.standard.gameState = gameState
+    }
+    public static func getPrevGame() -> GameState? {
+        UserDefaults.standard.gameState
+    }
+    
     // MARK: - Settings in the game
     private static var noteOn = false
     public static func switchNote() {
@@ -86,6 +95,9 @@ class SettingsModel {
     /// switch to the opposite value field "dark mode"
     public static func switchDarkMode() {
         UserDefaults.standard.isDarkMode = !UserDefaults.standard.isDarkMode
+        for delegate in delegates {
+            delegate.changeColor()
+        }
     }
     
     /// main background color. Depends on the dark mode
@@ -98,7 +110,11 @@ class SettingsModel {
     }
     /// secondary background color. Depends on the dark mode
     public static func getSecondaryBackgroundColor() -> UIColor {
-        UIColor.secondarySystemBackground
+        if (isDarkMode()) {
+            return .init(red: 36 / 255, green: 38 / 255, blue: 41 / 255, alpha: 1)
+        } else {
+            return UIColor.secondarySystemBackground
+        }
     }
     
     /// set main color of the app after choosing the color in the "SettingsViewController"

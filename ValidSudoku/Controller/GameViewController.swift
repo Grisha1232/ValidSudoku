@@ -9,7 +9,7 @@ import UIKit
 import CoreData
 
 // MARK: - GameViewController
-class GameViewController: UIViewController, ChangedColorProtocol, SelectionProtocol {
+class GameViewController: UIViewController, ChangedColorProtocol, SelectionProtocol, SaveBeforeExitProtocol {
     
     
     // MARK: - Variables
@@ -23,15 +23,18 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
     /// Game field view
     private var gameField: GameFieldView
     
+    /// Game saver for "undo" operations and for continuing the prev game
+    private let gameSaver: GameSaver
+    
     /// StackView with buttons for tools
     private let toolsStackView = UIStackView()
-    // StackView with buttons for digits
+    /// StackView with buttons for digits
     private let lineDigitsStackView = UIStackView()
     private var digitsCount: [Int] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
     
     /// Selected states
-    private var selectedRow: Int = 0
-    private var selectedCol: Int = 0
+    private var selectedRow: Int = -1
+    private var selectedCol: Int = -1
     private var selectedSquare: GameFieldSquare? = nil
     private var selectedPreFilled: Bool = true
     
@@ -39,6 +42,16 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
     init(levelGame: String?) {
         self.levelGame = levelGame ?? ""
         gameField = GameFieldView(levelGame: self.levelGame)
+        gameSaver = GameSaver(state: GameState(levelString: self.levelGame, mistakesCount: mistakes, timer: seconds, fieldState: gameField.saveGame()))
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    init(gameState: GameState) {
+        self.levelGame = gameState.getLevel()
+        self.seconds = gameState.getTimer()
+        self.mistakes = gameState.getMistakes()
+        self.gameField = GameFieldView(fieldState: gameState.getFieldState())
+        self.gameSaver = GameSaver(state: gameState)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -49,6 +62,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
     override func viewDidLoad() {
         super.viewDidLoad()
         SettingsModel.appendTo(content: self)
+        (UIApplication.shared.delegate as? AppDelegate)?.addDelegate(del: self)
         setupUI()
     }
     
@@ -63,33 +77,60 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
     
     /// Protocol function for changing color after setting it in "SettingsViewController"
     internal func changeColor() {
+        view.backgroundColor = SettingsModel.getMainBackgroundColor()
         for navItem in navigationItem.leftBarButtonItems! {
             navItem.tintColor = SettingsModel.getMainColor()
         }
         for navItem in navigationItem.rightBarButtonItems! {
             navItem.tintColor = SettingsModel.getMainColor()
         }
+        var i = 0
         for numBtn in lineDigitsStackView.subviews {
-            (numBtn as! UIButton).setTitleColor(SettingsModel.getMainColor(), for: .normal)
+            if (digitsCount[i] != 9) {
+                (numBtn as! UIButton).setTitleColor(SettingsModel.getMainColor(), for: .normal)
+            } else {
+                (numBtn as! UIButton).setTitleColor(SettingsModel.getSecondaryBackgroundColor() , for: .normal)
+            }
+            i += 1
         }
         gameField.refreshFromSelection()
+        gameField.changeColor()
+        
+        for i in 0...2 {
+            (descriptionStackView.subviews[i] as! UILabel).textColor = SettingsModel.isDarkMode() ? .white : .label
+        }
+        for i in 0...3 {
+            toolsStackView.subviews[i].subviews[0].tintColor = SettingsModel.isDarkMode() ? .white : .label
+            (toolsStackView.subviews[i].subviews[1] as! UILabel).textColor = SettingsModel.isDarkMode() ? .white : .label
+        }
+        
     }
     
     internal func countUpMistakes() {
         mistakes += 1
         let label = self.descriptionStackView.subviews[1] as! UILabel
-        label.text = "Mistakes: " + String(mistakes)
+        label.text = "Mistakes: " + String(mistakes) + (SettingsModel.isMistakesLimitSet() ? "/3" : "")
+        if (SettingsModel.isMistakesLimitSet() && mistakes == 3) {
+            gameOverWithLoose()
+        }
+    }
+    
+    internal func saveBeforeExitApp() {
+        gameSaver.save(state: GameState(levelString: levelGame, mistakesCount: mistakes, timer: seconds, fieldState: gameField.saveGame()))
+        SettingsModel.save(gameState: gameSaver.getPrevSave())
     }
     
     
     // MARK: - Setup UI functions
     private func setupUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = SettingsModel.getSecondaryBackgroundColor()
         setupBarButtons()
         setupLineDigits()
         setupTools()
         setupGameField()
         setupDescriptions()
+        
+        
     }
     
     /// Set back and setting buttons and title
@@ -124,13 +165,15 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         
         let levelLabel = UILabel()
         levelLabel.text = levelGame
+        levelLabel.textColor = SettingsModel.isDarkMode() ? .white : .label
         levelLabel.font = .systemFont(ofSize: view.frame.width / 23)
         levelLabel.textAlignment = .left
         descriptionStackView.addArrangedSubview(levelLabel)
         levelLabel.setWidth((view.frame.width - 34) / 3)
         
         let mistakesCount = UILabel()
-        mistakesCount.text = "Mistakes: 0"
+        mistakesCount.text = "Mistakes: " + String(mistakes) + (SettingsModel.isMistakesLimitSet() ? "/3" : "")
+        mistakesCount.textColor = SettingsModel.isDarkMode() ? .white : .label
         mistakesCount.font = .systemFont(ofSize: view.frame.width / 23)
         mistakesCount.textAlignment = .center
         descriptionStackView.addArrangedSubview(mistakesCount)
@@ -139,6 +182,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(updateTimeLabel), userInfo: nil, repeats: true)
         let timerLabel = UILabel()
         timerLabel.text = "time: 0:00"
+        timerLabel.textColor = SettingsModel.isDarkMode() ? .white : .label
         timerLabel.font = .systemFont(ofSize: view.frame.width / 23)
         timerLabel.textAlignment = .right
         descriptionStackView.addArrangedSubview(timerLabel)
@@ -169,13 +213,14 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
             let button = UIButton()
             let toolLabel = UILabel()
             
-            button.backgroundColor = .white
+//            button.backgroundColor = SettingsModel.getSecondaryBackgroundColor()
             button.setBackgroundImage(tool, for: .normal)
             button.tag = i
-            button.tintColor = .label
+            button.tintColor = SettingsModel.isDarkMode() ? .white : .label
             
             if i == 0 {
                 toolLabel.text = "undo"
+                button.addTarget(self, action: #selector(undoButtonTapped(_:)), for: .touchUpInside)
             } else if i == 1 {
                 toolLabel.text = "erase"
                 button.addTarget(self, action: #selector(eraseButtonTapped(_:)), for: .touchUpInside)
@@ -187,6 +232,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
             }
             i += 1
             toolLabel.textAlignment = .center
+            toolLabel.textColor = SettingsModel.isDarkMode() ? .white : .label
             
             toolLabel.font = .systemFont(ofSize: 14)
             
@@ -211,18 +257,22 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
     
     /// Set digit buttons for filling the cells in the field
     private func setupLineDigits() {
+        digitsCount = gameField.countDigitInMatrix()
         view.addSubview(lineDigitsStackView)
         for i in 0..<9 {
             let button = UIButton()
-            button.backgroundColor = .white
             button.setTitle(String(i + 1), for: .normal)
             button.tag = i + 1
             button.setTitleColor(SettingsModel.getMainColor(), for: .normal)
             button.titleLabel?.font = .systemFont(ofSize: 32)
             button.addTarget(self, action: #selector(numberTapped(_:)), for: .touchUpInside)
+            if (digitsCount[i] == 9) {
+                button.isEnabled = false
+                button.setTitleColor(SettingsModel.getSecondaryBackgroundColor() , for: .normal)
+            }
             lineDigitsStackView.addArrangedSubview(button)
         }
-        lineDigitsStackView.axis    = .horizontal
+        lineDigitsStackView.axis         = .horizontal
         lineDigitsStackView.alignment    = .center
         lineDigitsStackView.distribution = .equalSpacing
         lineDigitsStackView.pinBottom(to: view.safeAreaLayoutGuide.bottomAnchor, 16)
@@ -234,7 +284,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         if (SettingsModel.isNoteOn()) {
             for numBtn in lineDigitsStackView.subviews {
                 let numb = numBtn as! UIButton
-                numb.setTitleColor(.label, for: .normal)
+                numb.setTitleColor(SettingsModel.isDarkMode() ? .white : .label, for: .normal)
                 numb.isEnabled = true
             }
         } else {
@@ -244,16 +294,45 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
             for i in 0...8 {
                 if (digitsCount[i] == 9) {
                     (lineDigitsStackView.subviews[i] as! UIButton).isEnabled = false
-                    (lineDigitsStackView.subviews[i] as! UIButton).setTitleColor(.white, for: .normal)
+                    (lineDigitsStackView.subviews[i] as! UIButton).setTitleColor(SettingsModel.getSecondaryBackgroundColor(), for: .normal)
                 }
             }
         }
     }
     
-    private func gameOver() {
-        navigationController?.present(GameOverView(), animated: true, completion: {() -> Void in
-            self.navigationController?.popViewController(animated: true)
-        })
+    private func gameOver(isGameWon: Bool) {
+        if (isGameWon) {
+            gameOverWithWin()
+        } else {
+            gameOverWithLoose()
+        }
+    }
+    
+    private func gameOverWithWin() {
+        timer?.invalidate()
+        navigationController?.popViewController(animated: true)
+        let alert = UIAlertController(title: "Win!", message: "lol", preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Ok", style: .cancel))
+        navigationController?.present(alert, animated: true)
+    }
+    
+    private func gameOverWithoutLoose() {
+        timer?.invalidate()
+        navigationController?.popViewController(animated: true)
+        gameSaver.save(state: GameState(levelString: levelGame, mistakesCount: mistakes, timer: seconds, fieldState: gameField.saveGame()))
+        SettingsModel.save(gameState: gameSaver.getPrevSave() ?? GameState(levelString: "none", mistakesCount: 0, timer: 0, fieldState: FieldState(field: [], preFilled: [], answerMatrix: [])))
+        let alert = UIAlertController(title: "Saved", message: "lol", preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Ok", style: .cancel))
+        navigationController?.present(alert, animated: true)
+    }
+    
+    private func gameOverWithLoose() {
+        timer?.invalidate()
+        SettingsModel.save(gameState: nil)
+        navigationController?.popViewController(animated: true)
+        let alert = UIAlertController(title: "Loose", message: "lol", preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Ok", style: .cancel))
+        navigationController?.present(alert, animated: true)
     }
     
     
@@ -275,6 +354,22 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         }
     }
     
+    @objc private func undoButtonTapped(_ sender: UIButton) {
+        if (gameSaver.canUndo()) {
+            let _ = gameSaver.getRemoveLast()
+            let save = gameSaver.getPrevSave()
+            gameField.undoToState(gameState: save!);
+            selectedRow = -1
+        } else {
+            let alert = UIAlertController(title: "There is no move you can undo", message: "oops", preferredStyle: .actionSheet)
+            navigationController?.present(alert, animated: true, completion: {
+                sleep(1)
+                alert.dismiss(animated: true)
+            })
+        }
+        
+    }
+    
     @objc private func eraseButtonTapped(_ sender: UIButton) {
         if(!selectedPreFilled) {
             gameField.setFieldMatrix(gameSquare: selectedSquare!, row: selectedRow, col: selectedCol, num: 0)
@@ -288,6 +383,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
                     (lineDigitsStackView.subviews[i] as! UIButton).setTitleColor(SettingsModel.isNoteOn() ? .label : SettingsModel.getMainColor(), for: .normal)
                 }
             }
+            gameSaver.save(state: GameState(levelString: levelGame, mistakesCount: mistakes, timer: seconds, fieldState: gameField.saveGame()))
         }
     }
     
@@ -297,7 +393,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
     }
     
     @objc private func numberTapped(_ sender: UIButton) {
-        if (!selectedPreFilled && !SettingsModel.isNoteOn()){
+        if (!selectedPreFilled && !SettingsModel.isNoteOn() && selectedRow != -1){
             gameField.setFieldMatrix(gameSquare: selectedSquare!, row: selectedRow, col: selectedCol, num: sender.tag)
             digitsCount = gameField.countDigitInMatrix()
             var count = 0
@@ -305,27 +401,43 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
                 if (digitsCount[i] == 9) {
                     count += 1
                     (lineDigitsStackView.subviews[i] as! UIButton).isEnabled = false
-                    (lineDigitsStackView.subviews[i] as! UIButton).setTitleColor(.white, for: .normal)
+                    (lineDigitsStackView.subviews[i] as! UIButton).setTitleColor(SettingsModel.getSecondaryBackgroundColor(), for: .normal)
                 } else {
                     (lineDigitsStackView.subviews[i] as! UIButton).isEnabled = true
                     (lineDigitsStackView.subviews[i] as! UIButton).setTitleColor(SettingsModel.getMainColor(), for: .normal)
                 }
             }
+            gameSaver.save(state: GameState(levelString: levelGame, mistakesCount: mistakes, timer: seconds, fieldState: gameField.saveGame()))
             if (count == 9 && gameField.isGameOver()) {
-                gameOver()
+                gameOver(isGameWon: true)
+            } else if (count == 9 && !SettingsModel.isMistakesIndicates()) {
+                gameField.showMistakesAfterGame()
             }
-        } else {
+        } else if (!selectedPreFilled && SettingsModel.isNoteOn() && selectedRow != -1) {
             gameField.setFieldMatrix(gameSquare: selectedSquare!, row: selectedRow, col: selectedCol, num: sender.tag)
         }
     }
     
     @objc private func tappedButtonSettings(_ sender: UIBarButtonItem) {
-        let settings = SettingsViewController()
+        gameField.refreshFromSelection()
+        let settings = SettingsViewController(isOpenedFromTheGame: true)
+        if (SettingsModel.isNoteOn()) {
+            noteButtonTapped(toolsStackView.subviews[2].subviews[0] as! UIButton)
+        }
         navigationController?.pushViewController(settings, animated: true)
     }
     
     @objc private func tappedButtonBack(_ sender: UIBarButtonItem) {
-        navigationController?.popViewController(animated: true)
+        let alert = UIAlertController(title: "Do you wanna continue game in future?", message: "Press \"Yes\" if u wnna save game\n Press \"No\" if you wanna end this game (count as loose)", preferredStyle: .actionSheet)
+        let actionYes = UIAlertAction(title: "Yes", style: .default, handler: {_ in
+            self.gameOverWithoutLoose()
+        })
+        alert.addAction(actionYes)
+        let actionNo = UIAlertAction(title: "No", style: .destructive, handler: {_ in
+            self.gameOverWithLoose()
+        })
+        alert.addAction(actionNo)
+        navigationController?.present(alert, animated: true)
     }
     
 }

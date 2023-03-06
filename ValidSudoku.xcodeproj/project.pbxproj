@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C32CB4A829B104F900EBF0C0 /* GameOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32CB4A729B104F900EBF0C0 /* GameOverView.swift */; };
+		C32CB4AA29B1FACE00EBF0C0 /* GameSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32CB4A929B1FACE00EBF0C0 /* GameSaver.swift */; };
+		C32CB4AC29B1FAF800EBF0C0 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32CB4AB29B1FAF800EBF0C0 /* GameState.swift */; };
+		C32CB4AE29B1FE6700EBF0C0 /* FieldState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32CB4AD29B1FE6700EBF0C0 /* FieldState.swift */; };
+		C32CB4B029B23EC400EBF0C0 /* SaveBeforeExitProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32CB4AF29B23EC400EBF0C0 /* SaveBeforeExitProtocol.swift */; };
 		C360DE0F298B248700D5A192 /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C360DE0E298B248700D5A192 /* SettingsModel.swift */; };
 		C360DE11298B26A800D5A192 /* UIColor+extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C360DE10298B26A800D5A192 /* UIColor+extentions.swift */; };
 		C360DE13298B26C700D5A192 /* Data+extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = C360DE12298B26C700D5A192 /* Data+extention.swift */; };
@@ -38,7 +41,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		C32CB4A729B104F900EBF0C0 /* GameOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverView.swift; sourceTree = "<group>"; };
+		C32CB4A929B1FACE00EBF0C0 /* GameSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSaver.swift; sourceTree = "<group>"; };
+		C32CB4AB29B1FAF800EBF0C0 /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
+		C32CB4AD29B1FE6700EBF0C0 /* FieldState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldState.swift; sourceTree = "<group>"; };
+		C32CB4AF29B23EC400EBF0C0 /* SaveBeforeExitProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveBeforeExitProtocol.swift; sourceTree = "<group>"; };
 		C360DE0E298B248700D5A192 /* SettingsModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
 		C360DE10298B26A800D5A192 /* UIColor+extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+extentions.swift"; sourceTree = "<group>"; };
 		C360DE12298B26C700D5A192 /* Data+extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+extention.swift"; sourceTree = "<group>"; };
@@ -141,7 +147,6 @@
 			isa = PBXGroup;
 			children = (
 				C37806B829801C8B000947EB /* GameFieldView.swift */,
-				C32CB4A729B104F900EBF0C0 /* GameOverView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -154,6 +159,9 @@
 				C3D866F52980236200CA336D /* CellWithNumber.swift */,
 				C367FC37298CEB8400516A1F /* GeneratorOfMatrix.swift */,
 				C3D18CF82995701D008A4CAC /* SudokuSolver.swift */,
+				C32CB4A929B1FACE00EBF0C0 /* GameSaver.swift */,
+				C32CB4AB29B1FAF800EBF0C0 /* GameState.swift */,
+				C32CB4AD29B1FE6700EBF0C0 /* FieldState.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -177,6 +185,7 @@
 				C3C958A82983E6CF0091B377 /* setNumbersProtocol.swift */,
 				C360DE19298B2A0700D5A192 /* changedColorProtocol.swift */,
 				C3D18CFA29959479008A4CAC /* setSelectionProtocol.swift */,
+				C32CB4AF29B23EC400EBF0C0 /* SaveBeforeExitProtocol.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -260,9 +269,11 @@
 				C382B7D22975411B002A07AB /* AppDelegate.swift in Sources */,
 				C382B7D42975411B002A07AB /* SceneDelegate.swift in Sources */,
 				C360DE1A298B2A0700D5A192 /* changedColorProtocol.swift in Sources */,
+				C32CB4AE29B1FE6700EBF0C0 /* FieldState.swift in Sources */,
 				C382B7F9297576E1002A07AB /* ProfileViewController.swift in Sources */,
 				C39C637C2987DECA00937D22 /* UIView+makeNewView.swift in Sources */,
 				C3D866F429801FD000CA336D /* CellForGameField.swift in Sources */,
+				C32CB4AA29B1FACE00EBF0C0 /* GameSaver.swift in Sources */,
 				C3D18CF92995701D008A4CAC /* SudokuSolver.swift in Sources */,
 				C37806B7298012EE000947EB /* UIButton+makeNewButton.swift in Sources */,
 				C3D866F62980236200CA336D /* CellWithNumber.swift in Sources */,
@@ -271,11 +282,12 @@
 				C382B7DC2975411B002A07AB /* ValidSudoku.xcdatamodeld in Sources */,
 				C3C958A92983E6CF0091B377 /* setNumbersProtocol.swift in Sources */,
 				C3C958A72983DC4A0091B377 /* cellTappedProtocol.swift in Sources */,
+				C32CB4AC29B1FAF800EBF0C0 /* GameState.swift in Sources */,
 				C360DE1C298B33B200D5A192 /* UISwitcher+changeColor.swift in Sources */,
+				C32CB4B029B23EC400EBF0C0 /* SaveBeforeExitProtocol.swift in Sources */,
 				C360DE11298B26A800D5A192 /* UIColor+extentions.swift in Sources */,
 				C360DE13298B26C700D5A192 /* Data+extention.swift in Sources */,
 				C382B7F0297545CF002A07AB /* SettingsViewController.swift in Sources */,
-				C32CB4A829B104F900EBF0C0 /* GameOverView.swift in Sources */,
 				C367FC38298CEB8400516A1F /* GeneratorOfMatrix.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

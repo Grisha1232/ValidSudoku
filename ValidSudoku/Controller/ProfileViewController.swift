@@ -67,6 +67,7 @@ class ProfileViewController: UIViewController {
     
     /// Set stats view
     private func setupStatsView() {
+        view.backgroundColor = SettingsModel.getMainBackgroundColor()
         view.addSubview(scrollView)
         scrollView.delegate = self
         scrollView.bounces = false
@@ -74,10 +75,10 @@ class ProfileViewController: UIViewController {
         scrollView.pinTop(to: SVFilterButtons.bottomAnchor, 16)
         scrollView.pin(to: view, [.left, .right])
         scrollView.pinBottom(to: view.bottomAnchor)
-        scrollView.backgroundColor = .secondarySystemBackground
+        scrollView.backgroundColor = SettingsModel.getSecondaryBackgroundColor()
         
         scrollView.addSubview(statsStackView)
-        statsStackView.backgroundColor = .secondarySystemBackground
+        statsStackView.backgroundColor = SettingsModel.getSecondaryBackgroundColor()
         statsStackView.axis = .vertical
         statsStackView.pin(to: scrollView, [.right: 0, .left: 0, .top: 16, .bottom: 32])
         statsStackView.pinWidth(to: scrollView.widthAnchor)

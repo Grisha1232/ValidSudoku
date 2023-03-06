@@ -100,6 +100,7 @@ class MainViewController: UIViewController, ChangedColorProtocol {
     /// Set the "continue" button
     private func setupButtonContinue() {
         view.addSubview(continueGameButton)
+        continueGameButton.addTarget(self, action: #selector(tappedContinueButton(_:)), for: .touchUpInside)
         continueGameButton.pin(to: view, [.left: 16, .right: 16])
         continueGameButton.pinBottom(to: view.safeAreaLayoutGuide.bottomAnchor, 16)
     }
@@ -107,7 +108,7 @@ class MainViewController: UIViewController, ChangedColorProtocol {
     
     //MARK: - Objc func (buttons actions)
     @objc private func tappedButtonSettings(_ sender: UIBarButtonItem) {
-        let settings = SettingsViewController()
+        let settings = SettingsViewController(isOpenedFromTheGame: false)
         navigationController?.pushViewController(settings, animated: true)
     }
     
@@ -123,11 +124,48 @@ class MainViewController: UIViewController, ChangedColorProtocol {
     }
     
     @objc private func tappedCreateGameButtons(_ sender: UIButton) {
-        let game = GameViewController(levelGame: sender.titleLabel?.text ?? "Ban")
-        navigationController?.pushViewController(game, animated: true)
+        if let _ = SettingsModel.getPrevGame() {
+            let alert = UIAlertController(title: "Do you want to start new Game?", message: "You have game that don't finished", preferredStyle: .actionSheet)
+            let actionYes = UIAlertAction(title: "Yes", style: .default, handler: {_ in
+                let game = GameViewController(levelGame: sender.titleLabel?.text ?? "Ban")
+                self.navigationController?.pushViewController(game, animated: true)
+            })
+            let actionNo = UIAlertAction(title: "No", style: .destructive, handler: {_ in
+                self.levelGameButtons.isHidden.toggle()
+                self.newGameButton.isHidden.toggle()
+            })
+            alert.addAction(actionYes)
+            alert.addAction(actionNo)
+            navigationController?.present(alert, animated: true)
+        } else {
+            let game = GameViewController(levelGame: sender.titleLabel?.text ?? "Ban")
+            navigationController?.pushViewController(game, animated: true)
+        }
+    }
+    
+    @objc private func tappedContinueButton(_ sender: UIButton) {
+        if let save = SettingsModel.getPrevGame() {
+            let t: String = String(Int(save.getTimer()) / 60) + ":" + (Int(save.getTimer()) / 10 == 0 ? "0" + String(Int(save.getTimer())) : String(Int(save.getTimer()) % 60))
+            let alert = UIAlertController(title: "u r gonna continue game",
+                                          message:  "level: \(save.getLevel())\n" +
+                                                    "mistakes were made: \(save.getMistakes())\n" +
+                                                    "time from start: \(t)",
+                                          preferredStyle: .actionSheet)
+            let action = UIAlertAction(title: "Ok", style: .default, handler: {_ in
+                let game = GameViewController(gameState: save)
+                self.navigationController?.pushViewController(game, animated: true)
+            })
+            alert.addAction(action)
+            navigationController?.present(alert, animated: true)
+        } else {
+            let alert = UIAlertController(title: "there is no game to continue", message: "", preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "Ok", style: .cancel))
+            navigationController?.present(alert, animated: true)
+        }
     }
     
     internal func changeColor() {
+        view.backgroundColor = SettingsModel.getMainBackgroundColor()
         continueGameButton.backgroundColor = SettingsModel.getMainColor()
         newGameButton.backgroundColor = SettingsModel.getMainColor()
         for subView in levelGameButtons.subviews {
@@ -139,6 +177,7 @@ class MainViewController: UIViewController, ChangedColorProtocol {
         for navItem in navigationItem.rightBarButtonItems! {
             navItem.tintColor = SettingsModel.getMainColor()
         }
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: SettingsModel.isDarkMode() ? UIColor.white : UIColor.darkText]
     }
 }
 

@@ -21,6 +21,26 @@ extension UserDefaults {
         data(forKey: defaultName)?.color
     }
     
+    public var gameState: GameState? {
+        get {
+            if let data = object(forKey: "gameState") as? Data, let gameState = try? JSONDecoder().decode(GameState.self, from: data) {
+                return gameState
+            } else {
+                return nil
+            }
+            
+        }
+        set {
+            if let encoded = try? JSONEncoder().encode(newValue) {
+                set(encoded, forKey: "gameState")
+            } else {
+                let any: Any? = nil
+                set(any, forKey: "gameState")
+            }
+            
+        }
+    }
+    
     public var mainColor: UIColor? {
         get { color(forKey: "mainColor") }
         set { set(newValue, forKey: "mainColor") }
