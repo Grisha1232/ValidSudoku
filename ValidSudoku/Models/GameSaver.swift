@@ -42,4 +42,11 @@ class GameSaver {
         }
         return states.removeLast()
     }
+    
+    public func getFirstSave() -> GameState? {
+        if (states.count == 0) {
+            return nil
+        }
+        return states.first
+    }
 }

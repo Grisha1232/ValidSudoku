@@ -41,6 +41,14 @@ class GeneratorOfMatrix {
         } else {
             amountOfHints = Int.random(in: 20...25)
         }
+        print("------------")
+        for i in 0...8 {
+            for j in 0...8 {
+                print(solver.matrix[i][j], separator: " ", terminator: " ")
+            }
+            print("")
+        }
+        print("\n\n")
         matrix = solver.getSudokuMatrix(amountOfHints)
         return matrix
     }

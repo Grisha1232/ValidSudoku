@@ -229,6 +229,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
                 button.addTarget(self, action: #selector(noteButtonTapped(_:)), for: .touchUpInside)
             } else {
                 toolLabel.text = "hint"
+                button.addTarget(self, action: #selector(hintButtonTapped(_:)), for: .touchUpInside)
             }
             i += 1
             toolLabel.textAlignment = .center
@@ -300,16 +301,46 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         }
     }
     
+    private func restartTheGame() {
+        let state = gameSaver.getFirstSave()!
+        navigationController?.popViewController(animated: true)
+        let restartGame = GameViewController(gameState: state)
+        navigationController?.pushViewController(restartGame, animated: true)
+    }
+    
     private func gameOver(isGameWon: Bool) {
+        print("OVER")
         if (isGameWon) {
             gameOverWithWin()
         } else {
-            gameOverWithLoose()
+            for sub in toolsStackView.subviews {
+                (sub.subviews[0] as! UIButton).isEnabled = false
+                (sub.subviews[0] as! UIButton).isHidden = true
+                (sub.subviews[1] as! UILabel).text = "over"
+            }
+            print("LOOSER")
+            if (!SettingsModel.isMistakesIndicates()) {
+                gameField.showMistakesAfterGame()
+            }
+            let alert = UIAlertController(title: "Do you wnat to restart the game?", message: "There are mistakes maden", preferredStyle: .actionSheet)
+            let actionYes = UIAlertAction(title: "Yes", style: .default, handler: {_ in
+                self.restartTheGame()
+            })
+            let actionNo = UIAlertAction(title: "No", style: .destructive, handler: {_ in
+                self.gameOverWithLoose()
+            })
+            alert.addAction(actionYes)
+            alert.addAction(actionNo)
+            navigationController?.present(alert, animated: true)
         }
     }
     
     private func gameOverWithWin() {
         timer?.invalidate()
+        ProfileModel.countUpGameWon(levelGame)
+        if (mistakes == 0) {
+            ProfileModel.countUpWinWithMoMistakes(levelGame)
+        }
         navigationController?.popViewController(animated: true)
         let alert = UIAlertController(title: "Win!", message: "lol", preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Ok", style: .cancel))
@@ -377,7 +408,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
             for i in 0...8 {
                 if (digitsCount[i] == 9) {
                     (lineDigitsStackView.subviews[i] as! UIButton).isEnabled = false
-                    (lineDigitsStackView.subviews[i] as! UIButton).setTitleColor(.white, for: .normal)
+                    (lineDigitsStackView.subviews[i] as! UIButton).setTitleColor(SettingsModel.getSecondaryBackgroundColor(), for: .normal)
                 } else {
                     (lineDigitsStackView.subviews[i] as! UIButton).isEnabled = true
                     (lineDigitsStackView.subviews[i] as! UIButton).setTitleColor(SettingsModel.isNoteOn() ? .label : SettingsModel.getMainColor(), for: .normal)
@@ -390,6 +421,33 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
     @objc private func noteButtonTapped(_ sender: UIButton) {
         SettingsModel.switchNote()
         switchLineDigits()
+    }
+    
+    @objc private func hintButtonTapped(_ sender: UIButton) {
+        if (gameField.isNoMistakesInMatrix()) {
+            gameField.getHint()
+        } else {
+            gameField.getRidOfInccorections()
+            gameField.getHint()
+        }
+        digitsCount = gameField.countDigitInMatrix()
+        var count = 0
+        for i in 0...8 {
+            if (digitsCount[i] == 9) {
+                count += 1
+                (lineDigitsStackView.subviews[i] as! UIButton).isEnabled = false
+                (lineDigitsStackView.subviews[i] as! UIButton).setTitleColor(SettingsModel.getSecondaryBackgroundColor(), for: .normal)
+            } else {
+                (lineDigitsStackView.subviews[i] as! UIButton).isEnabled = true
+                (lineDigitsStackView.subviews[i] as! UIButton).setTitleColor(SettingsModel.getMainColor(), for: .normal)
+            }
+        }
+        gameSaver.save(state: GameState(levelString: levelGame, mistakesCount: mistakes, timer: seconds, fieldState: gameField.saveGame()))
+        if (gameField.isGameOver() && gameField.isGameOverWithWin()) {
+            gameOver(isGameWon: true)
+        } else if (gameField.isGameOver() && !gameField.isGameOverWithWin()){
+            gameOver(isGameWon: false)
+        }
     }
     
     @objc private func numberTapped(_ sender: UIButton) {
@@ -408,10 +466,10 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
                 }
             }
             gameSaver.save(state: GameState(levelString: levelGame, mistakesCount: mistakes, timer: seconds, fieldState: gameField.saveGame()))
-            if (count == 9 && gameField.isGameOver()) {
+            if (gameField.isGameOver() && gameField.isNoMistakesInMatrix()) {
                 gameOver(isGameWon: true)
-            } else if (count == 9 && !SettingsModel.isMistakesIndicates()) {
-                gameField.showMistakesAfterGame()
+            } else if (gameField.isGameOver() && !gameField.isNoMistakesInMatrix()){
+                gameOver(isGameWon: false)
             }
         } else if (!selectedPreFilled && SettingsModel.isNoteOn() && selectedRow != -1) {
             gameField.setFieldMatrix(gameSquare: selectedSquare!, row: selectedRow, col: selectedCol, num: sender.tag)

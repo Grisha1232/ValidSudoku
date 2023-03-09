@@ -70,4 +70,62 @@ extension UserDefaults {
         get { bool(forKey: "highlightSameNumber") }
         set { set(newValue, forKey: "highlightSameNumber") }
     }
+    
+    
+    public var easyGameStarted: Int {
+        get { Int(double(forKey: "easyGameStarted")) }
+        set { set(newValue, forKey: "easyGameStarted") }
+    }
+    public var easyGameWon: Int {
+        get { Int(double(forKey: "easyGameWon")) }
+        set { set(newValue, forKey: "easyGameWon") }
+    }
+    public var easyGameWinWithNoMistakes: Int {
+        get { Int(double(forKey: "easyGameWinWNM")) }
+        set { set(newValue, forKey: "easyGameWonWNM") }
+    }
+    
+    
+    public var mediumGameStarted: Int {
+        get { Int(double(forKey: "mediumGameStarted")) }
+        set { set(newValue, forKey: "mediumGameStarted") }
+    }
+    public var mediumGameWon: Int {
+        get { Int(double(forKey: "mediumGameWon")) }
+        set { set(newValue, forKey: "mediumGameWon") }
+    }
+    public var mediumGameWinWithNoMistakes: Int {
+        get { Int(double(forKey: "mediumGameWinWNM")) }
+        set { set(newValue, forKey: "mediumGameWonWNM") }
+    }
+    
+    
+    public var hardGameStarted: Int {
+        get { Int(double(forKey: "hardGameStarted")) }
+        set { set(newValue, forKey: "hardGameStarted") }
+    }
+    public var hardGameWon: Int {
+        get { Int(double(forKey: "hardGameWon")) }
+        set { set(newValue, forKey: "hardGameWon") }
+    }
+    public var hardGameWinWithNoMistakes: Int {
+        get { Int(double(forKey: "hardGameWinWNM")) }
+        set { set(newValue, forKey: "hardGameWonWNM") }
+    }
+    
+    
+    public var customGameStarted: Int {
+        get { Int(double(forKey: "customGameStarted")) }
+        set { set(newValue, forKey: "customGameStarted") }
+    }
+    public var customGameWon: Int {
+        get { Int(double(forKey: "customGameWon")) }
+        set { set(newValue, forKey: "customGameWon") }
+    }
+    public var customGameWinWithNoMistakes: Int {
+        get { Int(double(forKey: "customGameWinWNM")) }
+        set { set(newValue, forKey: "customGameWonWNM") }
+    }
+    
+    
 }

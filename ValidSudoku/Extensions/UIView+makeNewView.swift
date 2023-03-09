@@ -110,7 +110,7 @@ extension UIView {
         return view
     }
     
-    static func makeStatView(title: String, subTitles: [String]) -> UIView {
+    static func makeStatView(title: String, subTitles: [String], stats: [Double]) -> UIView {
         let view = UIView()
         let titleLabel = UILabel()
         let SVStats = UIStackView()
@@ -129,7 +129,7 @@ extension UIView {
         SVStats.spacing = 6
         SVStats.pin(to: view, [.right: 16, .left: 16])
         SVStats.pinTop(to: titleLabel.bottomAnchor, 16)
-        
+        var i = 0
         for subTitle in subTitles {
             let statView = UIView()
             let subTitleLabel = UILabel()
@@ -144,7 +144,7 @@ extension UIView {
             subTitleLabel.pin(to: statView, [.left: 32, .top: 16, .bottom: 16])
             subTitleLabel.font = .systemFont(ofSize: 16)
             
-            statLabel.text = "0"
+            statLabel.text = String(stats[i])
             statLabel.textColor = SettingsModel.isDarkMode() ? .white : .label
             statLabel.textAlignment = .right
             statLabel.pin(to: statView, [.right: 32, .top: 16, .bottom: 16])
@@ -154,6 +154,8 @@ extension UIView {
             statView.backgroundColor = SettingsModel.getMainBackgroundColor()
             statView.setHeight(50)
             
+            statView.tag = i
+            i += 1
             SVStats.addArrangedSubview(statView)
         }
         

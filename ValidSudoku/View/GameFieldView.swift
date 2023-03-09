@@ -22,6 +22,8 @@ final class GameFieldView: UIView, CellTappedProtocol, setNumbersProtocol {
     private var answerMatrix: [[Int]]
     /// solver of sudoku for checking filling the cell
     private let solver: SudokuSolver
+    /// indicate if there is mistakes currently
+    private var isNoMistakes: Bool = true
     /// delegate for selecting cell
     public var delegate: SelectionProtocol?
     
@@ -74,10 +76,21 @@ final class GameFieldView: UIView, CellTappedProtocol, setNumbersProtocol {
         return digits
     }
     
-    public func isGameOver() -> Bool {
+    public func isGameOverWithWin() -> Bool {
         for i in 0...8 {
             for j in 0...8 {
                 if (fieldMatrix[i][j] != answerMatrix[i][j]) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+    
+    public func isGameOver() -> Bool {
+        for i in 0...8 {
+            for j in 0...8 {
+                if (fieldMatrix[i][j] == 0) {
                     return false
                 }
             }
@@ -111,6 +124,10 @@ final class GameFieldView: UIView, CellTappedProtocol, setNumbersProtocol {
         }
     }
     
+    public func isNoMistakesInMatrix() -> Bool {
+        isNoMistakes
+    }
+    
     internal func showMistakesAfterGame() {
         for i in 0...8 {
             for j in 0...8 {
@@ -128,6 +145,28 @@ final class GameFieldView: UIView, CellTappedProtocol, setNumbersProtocol {
         }
     }
     
+    internal func getHint() {
+        let solver = SudokuSolver(matrix: fieldMatrix)
+        var num = 0, row = 0, col = 0
+        solver.getOneNubmberForSolve(number: &num, row: &row, col: &col)
+        setHintOnTheField(num: num, row: row, col: col)
+    }
+    
+    internal func getRidOfInccorections() {
+        for i in 0...8 {
+            for j in 0...8 {
+                if (!preFilled[i][j] && !isEqualWithAnswerMatrix(i, j)) {
+                    let gameSquare = collectionViewSquares.cellForItem(at: IndexPath(row: j / 3, section: i / 3)) as! GameFieldSquare
+                    let cell = gameSquare.collectionViewCells.cellForItem(at: IndexPath(row: j % 3, section: i % 3)) as! cellWithNumber
+                    fieldMatrix[i][j] = 0
+                    cell.setNumberLabel(numb: 0)
+                    cell.setIsCorrectNumb(true)
+                }
+            }
+        }
+        highlightIncorrectNumber(isUndo: false)
+    }
+    
     /// Set number to the specific cell of the field matrix
     internal func setFieldMatrix(gameSquare: GameFieldSquare, row: Int, col: Int, num: Int) {
         if (!SettingsModel.isNoteOn()) {
@@ -140,7 +179,12 @@ final class GameFieldView: UIView, CellTappedProtocol, setNumbersProtocol {
             if (SettingsModel.isMistakesIndicates()) {
                 highlightIncorrectNumber(isUndo: false)
             }
-            
+            if (!isEqualWithAnswerMatrix(row, col)) {
+                delegate?.countUpMistakes()
+                isNoMistakes = false
+            } else {
+                isNoMistakes = true
+            }
             tappedAtCell(fieldCellSelected: gameSquare, indexPathSelected: IndexPath(row: col % 3, section: row % 3))
         } else {
             let cellWithNumb = gameSquare.collectionViewCells.cellForItem(at: IndexPath(row: col % 3, section: row % 3)) as! cellWithNumber
@@ -184,7 +228,7 @@ final class GameFieldView: UIView, CellTappedProtocol, setNumbersProtocol {
             } else {
                 let currIndex = collectionViewSquares.indexPath(for: sq ?? GameFieldSquare())
                 let selectedIndex = collectionViewSquares.indexPath(for: fieldCellSelected)
-                if currIndex !=  selectedIndex && currIndex?.row == selectedIndex?.row {
+                if currIndex != selectedIndex && currIndex?.row == selectedIndex?.row {
                     for k in 0..<3 {
                         let cell = sq?.collectionViewCells.cellForItem(at: IndexPath(row: indexPath.row, section: k))
                         if ((cell as? cellWithNumber)!.isCorrectNumber()){
@@ -238,6 +282,63 @@ final class GameFieldView: UIView, CellTappedProtocol, setNumbersProtocol {
         }
     }
     
+    
+    private func setHintOnTheField(num: Int, row: Int, col: Int) {
+        let game_square = collectionViewSquares.cellForItem(at: IndexPath(row: col / 3, section: row / 3)) as! GameFieldSquare
+        let cell = game_square.collectionViewCells.cellForItem(at: IndexPath(row: col % 3, section: row % 3)) as! cellWithNumber
+        cell.configureNumber(numb: num, filled: true)
+        answerMatrix[row][col] = num
+        fieldMatrix[row][col] = num
+        preFilled[row][col] = true
+        refreshFromSelection()
+        hintSetted(fieldSquare: game_square, coords: (row, col), number: num)
+    }
+    
+    private func hintSetted(fieldSquare: GameFieldSquare, coords: (row: Int, col: Int), number: Int) {
+        var indexes: [(row: Int, col: Int)] = []
+        for i in 0...2 {
+            let gameSquare = collectionViewSquares.cellForItem(at: IndexPath(row: coords.col / 3, section: i)) as! GameFieldSquare
+            if (gameSquare != fieldSquare) {
+                let squarePath = collectionViewSquares.indexPath(for: gameSquare)
+                for c in gameSquare.collectionViewCells.visibleCells {
+                    let cell = c as! cellWithNumber
+                    if (cell.getNumber() == String(number)) {
+                        let path = gameSquare.collectionViewCells.indexPath(for: cell)
+                        indexes.append((squarePath!.section * 3 + path!.section, squarePath!.row * 3 + path!.row))
+                    }
+                }
+            }
+        }
+        for i in 0...2 {
+            let gameSquare = collectionViewSquares.cellForItem(at: IndexPath(row: i, section: coords.row / 3)) as! GameFieldSquare
+            if (gameSquare != fieldSquare) {
+                let squarePath = collectionViewSquares.indexPath(for: gameSquare)
+                for c in gameSquare.collectionViewCells.visibleCells {
+                    let cell = c as! cellWithNumber
+                    if (cell.getNumber() == String(number)) {
+                        let path = gameSquare.collectionViewCells.indexPath(for: cell)
+                        indexes.append((squarePath!.section * 3 + path!.section, squarePath!.row * 3 + path!.row))
+                    }
+                }
+            }
+        }
+        for index in indexes {
+            let gameSquare = collectionViewSquares.cellForItem(at: IndexPath(row: index.col / 3, section: index.row / 3)) as! GameFieldSquare
+            let cell = gameSquare.collectionViewCells.cellForItem(at: IndexPath(row: index.col % 3, section: index.row % 3)) as! cellWithNumber
+            cell.backgroundColor = SettingsModel.getMainColor().withAlphaComponent(0.5)
+        }
+        
+        for c in fieldSquare.collectionViewCells.visibleCells {
+            let cellPath = fieldSquare.collectionViewCells.indexPath(for: c as! cellWithNumber)
+            let cell = c as! cellWithNumber
+            if (cellPath!.section == coords.row % 3 && cellPath!.row == coords.col % 3) {
+                cell.backgroundColor = SettingsModel.getMainColor().withAlphaComponent(0.5)
+            } else {
+                cell.backgroundColor = SettingsModel.getMainColor().withAlphaComponent(0.2)
+            }
+        }
+    }
+    
     /// Checks if filled number in the right place in the filed matrix (comparing with answer matrix)
     private func isEqualWithAnswerMatrix(_ row: Int, _ col: Int) -> Bool {
         if (fieldMatrix[row][col] == 0) {
@@ -283,6 +384,7 @@ final class GameFieldView: UIView, CellTappedProtocol, setNumbersProtocol {
                     let cell = ((collectionViewSquares.cellForItem(at: IndexPath(row: j / 3, section: i / 3)) as! GameFieldSquare).collectionViewCells.cellForItem(at: IndexPath(row: j % 3, section: i % 3)) as! cellWithNumber)
                     cell.setIsCorrectNumb(false)
                     cell.backgroundColor = SettingsModel.getIncorrectColor().withAlphaComponent(0.5)
+                    print(i, j)
                     incorretNumbers.append([IndexPath(row: j / 3, section: i / 3), IndexPath(row: j % 3, section: i % 3)])
                     if (!isUndo) {
                         delegate?.countUpMistakes()
@@ -294,7 +396,12 @@ final class GameFieldView: UIView, CellTappedProtocol, setNumbersProtocol {
                 }
             }
         }
-        
+        if (incorretNumbers.isEmpty) {
+            isNoMistakes = true
+        } else {
+            isNoMistakes = false
+        }
+        print(incorretNumbers)
         for incorrect in incorretNumbers {
             let incorrectNum = ((collectionViewSquares.cellForItem(at: incorrect[0]) as! GameFieldSquare).collectionViewCells.cellForItem(at: incorrect[1]) as! cellWithNumber).getNumber()
             // in row

@@ -10,7 +10,7 @@
 class SudokuSolver {
     
     /// matrix that needed to be solve
-    private var matrix: [[Int]]
+    public var matrix: [[Int]]
     /// random positino for random acces of matrix
     private var randPos = getRandPos()
     /// random numbers from 1 to 9
@@ -162,6 +162,7 @@ class SudokuSolver {
                 break
             }
         }
+        print("difficult: \(difficult), needed: \(neededDifficult)")
         return matrix
     }
     
@@ -181,6 +182,77 @@ class SudokuSolver {
                 countSoln(number: &number);
             }
             matrix[row][col] = 0;
+        }
+    }
+    
+    private func checkOnlyPlaceForNum(_ sq: [[Int]], _ num: Int, _ area_row: Int, _ area_col: Int) -> (row: Int, col: Int) {
+        var square = sq
+        for i in 0...2 {
+            for j in 0...2 {
+                if (square[i][j] == 0 && !isValidPlace(row: area_row * 3 + i, col: area_col * 3 + j, num: num)) {
+                    square[i][j] = -1
+                }
+            }
+        }
+        
+        var count = 0
+        var coord_to_return = (-1, -1)
+        for i in 0...2 {
+            for j in 0...2 {
+                if (square[i][j] == 0) {
+                    count += 1
+                    coord_to_return = (i, j)
+                }
+            }
+        }
+        if (count == 1) {
+            return coord_to_return
+        }
+        return (-1, -1)
+    }
+    
+    public func getOneNubmberForSolve(number: inout Int, row: inout Int, col: inout Int) {
+        // check for every square
+        var square: [[Int]] = [[0, 0, 0],
+                               [0, 0, 0],
+                               [0, 0, 0]]
+        //        0       1       2
+        //      . . . | . . . | . . .
+        //  0   . . . | . . . | . . .
+        //      . . . | . . . | . . .
+        //      ---------------------
+        //      . . . | . . . | . . .
+        //  1   . . . | . . . | . . .
+        //      . . . | . . . | . . .
+        //      ---------------------
+        //      . . . | . . . | . . .
+        //  2   . . . | . . . | . . .
+        //      . . . | . . . | . . .
+        
+        for square_i in 0...2 {
+            for square_j in 0...2 {
+                var nums_in_square = [false, false, false, false, false, false, false, false ,false]
+                for i in 0...2 {
+                    for j in 0...2 {
+                        square[i][j] = matrix[square_i * 3 + i][square_j * 3 + j]
+                        if (square[i][j] != 0) {
+                            nums_in_square[square[i][j] - 1] = true
+                        }
+                    }
+                }
+                for num in 0...8 {
+                    if (!nums_in_square[num]) {
+                        let coords = checkOnlyPlaceForNum(square, num + 1, square_i, square_j)
+                        if (coords != (-1, -1)) {
+                            number = num + 1
+                            row = square_i * 3 + coords.row
+                            col = square_j * 3 + coords.col
+                            return
+                        }
+                    }
+                }
+                
+            }
         }
     }
     

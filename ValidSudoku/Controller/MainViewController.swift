@@ -128,6 +128,7 @@ class MainViewController: UIViewController, ChangedColorProtocol {
             let alert = UIAlertController(title: "Do you want to start new Game?", message: "You have game that don't finished", preferredStyle: .actionSheet)
             let actionYes = UIAlertAction(title: "Yes", style: .default, handler: {_ in
                 let game = GameViewController(levelGame: sender.titleLabel?.text ?? "Ban")
+                ProfileModel.countUpGameStarted(sender.titleLabel?.text ?? "")
                 self.navigationController?.pushViewController(game, animated: true)
             })
             let actionNo = UIAlertAction(title: "No", style: .destructive, handler: {_ in
@@ -139,6 +140,7 @@ class MainViewController: UIViewController, ChangedColorProtocol {
             navigationController?.present(alert, animated: true)
         } else {
             let game = GameViewController(levelGame: sender.titleLabel?.text ?? "Ban")
+            ProfileModel.countUpGameStarted(sender.titleLabel?.text ?? "")
             navigationController?.pushViewController(game, animated: true)
         }
     }
@@ -167,9 +169,12 @@ class MainViewController: UIViewController, ChangedColorProtocol {
     internal func changeColor() {
         view.backgroundColor = SettingsModel.getMainBackgroundColor()
         continueGameButton.backgroundColor = SettingsModel.getMainColor()
+        continueGameButton.setTitleColor(SettingsModel.isDarkMode() ? .darkText : .white, for: .normal)
         newGameButton.backgroundColor = SettingsModel.getMainColor()
+        newGameButton.setTitleColor(SettingsModel.isDarkMode() ? .darkText : .white, for: .normal)
         for subView in levelGameButtons.subviews {
             subView.backgroundColor = SettingsModel.getMainColor()
+            (subView as! UIButton).setTitleColor(SettingsModel.isDarkMode() ? .darkText : .white, for: .normal)
         }
         for navItem in navigationItem.leftBarButtonItems! {
             navItem.tintColor = SettingsModel.getMainColor()
