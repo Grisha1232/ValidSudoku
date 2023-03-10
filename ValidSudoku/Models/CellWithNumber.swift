@@ -63,6 +63,16 @@ final class cellWithNumber: UICollectionViewCell, ChangedColorProtocol {
         numberLabel.textColor = color
     }
     
+    public func setNoteNumbers(note: [Bool]?) {
+        if let n = note {
+            noteNumbers = n
+        }
+    }
+    
+    public func getNoteNumbers() -> [Bool] {
+        noteNumbers
+    }
+    
     /// set is it cell filled correct or not
     internal func setIsCorrectNumb(_ val: Bool) {
         isCorrectNumb = val
@@ -80,7 +90,7 @@ final class cellWithNumber: UICollectionViewCell, ChangedColorProtocol {
             numberLabel.textColor = SettingsModel.getMainColor()
         }
         for i in 0...8 {
-            noteNumbersLabel[i].textColor = SettingsModel.isDarkMode() ? .white : .label
+            noteNumbersLabel[i].textColor = SettingsModel.isDarkMode() ? .lightGray : .gray
         }
     }
     
@@ -99,7 +109,7 @@ final class cellWithNumber: UICollectionViewCell, ChangedColorProtocol {
         for i in 0...8 {
             addSubview(noteNumbersLabel[i])
             noteNumbersLabel[i].text = String(i + 1);
-            noteNumbersLabel[i].textColor = SettingsModel.isDarkMode() ? .white : .label
+            noteNumbersLabel[i].textColor = SettingsModel.isDarkMode() ? .lightGray : .gray
             noteNumbersLabel[i].font = .systemFont(ofSize: self.frame.width / 3)
             noteNumbersLabel[i].isHidden = true
         }

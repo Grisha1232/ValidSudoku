@@ -136,71 +136,30 @@ class ProfileViewController: UIViewController {
     }
     
     private func refreshStats() {
-        if (countFiltersIsOnt() == 4) {
-            let mass = getGameStats()
-            var i = 0
-            for subview in gamesStat.subviews[1].subviews {
-                (subview.subviews[1] as! UILabel).text = String(mass[i])
-                i += 1
-            }
-            for subview in streakStat.subviews[1].subviews {
-                (subview.subviews[1] as! UILabel).text = "4"
-            }
-            for subview in timeStat.subviews[1].subviews {
-                (subview.subviews[1] as! UILabel).text = "4"
-            }
+        let gameStat = getGameStats()
+        let streak = getStreakStats()
+        let time = getTimeStats()
+        var i = 0
+        for subview in gamesStat.subviews[1].subviews {
+            (subview.subviews[1] as! UILabel).text = gameStat[i]
+            i += 1
         }
-        
-        if (countFiltersIsOnt() == 3) {
-            let mass = getGameStats()
-            var i = 0
-            for subview in gamesStat.subviews[1].subviews {
-                (subview.subviews[1] as! UILabel).text = String(mass[i])
-                i += 1
-            }
-            for subview in streakStat.subviews[1].subviews {
-                (subview.subviews[1] as! UILabel).text = "3"
-            }
-            for subview in timeStat.subviews[1].subviews {
-                (subview.subviews[1] as! UILabel).text = "3"
-            }
+        i = 0
+        for subview in streakStat.subviews[1].subviews {
+            (subview.subviews[1] as! UILabel).text = streak[i]
+            i += 1
         }
-
-        if (countFiltersIsOnt() == 2) {
-            let mass = getGameStats()
-            var i = 0
-            for subview in gamesStat.subviews[1].subviews {
-                (subview.subviews[1] as! UILabel).text = String(mass[i])
-                i += 1
-            }
-            for subview in streakStat.subviews[1].subviews {
-                (subview.subviews[1] as! UILabel).text = "2"
-            }
-            for subview in timeStat.subviews[1].subviews {
-                (subview.subviews[1] as! UILabel).text = "2"
-            }
+        i = 0
+        for subview in timeStat.subviews[1].subviews {
+            (subview.subviews[1] as! UILabel).text = time[i]
+            i += 1
         }
-        
-        if (countFiltersIsOnt() == 1) {
-            let mass = getGameStats()
-            var i = 0
-            for subview in gamesStat.subviews[1].subviews {
-                (subview.subviews[1] as! UILabel).text = String(mass[i])
-                i += 1
-            }
-            for subview in streakStat.subviews[1].subviews {
-                (subview.subviews[1] as! UILabel).text = "1"
-            }
-            for subview in timeStat.subviews[1].subviews {
-                (subview.subviews[1] as! UILabel).text = "1"
-            }
-        }
-
 
     }
     
-    private func getGameStats() -> [Double] {
+    private func getGameStats() -> [String] {
         var mass: [Double] = [0, 0, 0, 0]
+        var result: [String] = []
         if (filtersSet[0]) {
             mass[0] += Double(ProfileModel.getEasyGameStarted())
             mass[1] += Double(ProfileModel.getEasyGameWon())
@@ -222,15 +181,53 @@ class ProfileViewController: UIViewController {
             mass[3] += Double(ProfileModel.getCustomGameWinWithNoMistakes())
         }
         mass[2] = ProfileModel.calcWinRate(filters: filtersSet) * 100
-        return mass
+        result.append(String(Int(mass[0])))
+        result.append(String(Int(mass[1])))
+        result.append(String(mass[2]) + " %")
+        result.append(String(Int(mass[3])))
+        return result
     }
     
-    private func getStreakStats() -> [Double] {
-        return [0, 0]
+    private func getStreakStats() -> [String] {
+        return [String(ProfileModel.getCurrentWinStreak()), String(ProfileModel.getBestWinStreak())]
     }
     
-    private func getTimeStats() -> [Double] {
-        return [0, 0]
+    private func getTimeStats() -> [String] {
+        var mass: [Double] = [0, 0]
+        var result: [String] = []
+        var games = 0
+        if (filtersSet[0]) {
+            games += ProfileModel.getEasyGameStarted()
+            mass[0] += ProfileModel.getEasyGameAveTime()
+            mass[1] = (mass[1] > ProfileModel.getEasyGameBestTime() && ProfileModel.getEasyGameBestTime() != 0) || mass[1] == 0 ? ProfileModel.getEasyGameBestTime() : mass[1]
+        }
+        if (filtersSet[1]) {
+            games += ProfileModel.getMediumGameStarted()
+            mass[0] += ProfileModel.getMediumGameAveTime()
+            mass[1] = (mass[1] > ProfileModel.getMediumGameBestTime() && ProfileModel.getMediumGameBestTime() != 0) || mass[1] == 0 ? ProfileModel.getMediumGameBestTime() : mass[1]
+        }
+        if (filtersSet[2]) {
+            games += ProfileModel.getHardGamesStarted()
+            mass[0] += ProfileModel.getHardGameAveTime()
+            mass[1] = (mass[1] > ProfileModel.getHardGameBestTime() && ProfileModel.getHardGameBestTime() != 0) || mass[1] == 0 ? ProfileModel.getHardGameBestTime() : mass[1]
+        }
+        if (filtersSet[3]) {
+            games += ProfileModel.getCustomGameStarted()
+            mass[0] += ProfileModel.getCustomGameAveTime()
+            mass[1] = (mass[1] > ProfileModel.getCustomGameBestTime() && ProfileModel.getCustomGameBestTime() != 0) || mass[1] == 0 ? ProfileModel.getCustomGameBestTime() : mass[1]
+        }
+        if (games == 0) {
+            mass[0] = 0
+        } else {
+            mass[0] = mass[0] / Double(games)
+        }
+        var min = Int(mass[0]) / 60
+        var sec = Int(mass[0]) % 60
+        result.append(String(min) + ":" + (sec / 10 == 0 ? "0" + String(sec) : String(sec)))
+        min = Int(mass[1]) / 60
+        sec = Int(mass[1]) % 60
+        result.append(String(min) + ":" + (sec / 10 == 0 ? "0" + String(sec) : String(sec)))
+        return result
     }
  
     

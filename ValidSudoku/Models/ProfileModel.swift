@@ -8,8 +8,8 @@
 import UIKit
 
 class ProfileModel {
+    // MARK: - GAMES
     
-    // MARK: - Game started
     ///
     public static func countUpGameStarted(_ level: String) {
         switch (level) {
@@ -69,7 +69,6 @@ class ProfileModel {
     }
     
     
-    //MARK: - Game won
     ///
     public static func countUpGameWon(_ level: String) {
         switch (level) {
@@ -129,7 +128,6 @@ class ProfileModel {
     }
     
 
-    //MARK: - Win rate
     public static func calcWinRate(filters: [Bool]) -> Double {
         var countWonGames = 0
         var countAllGames = 0
@@ -149,11 +147,11 @@ class ProfileModel {
             countAllGames += getCustomGameStarted()
             countWonGames += getCustomGameWon()
         }
-        return countAllGames == 0 ? 0.0 : Double(countWonGames) / Double(countAllGames)
+        let result = Double(countAllGames == 0 ? 0.0 : Double(countWonGames) / Double(countAllGames))
+        return (result * 100).rounded(.up) / 100
     }
     
     
-    //MARK: - Wins with no mistakes
     public static func countUpWinWithMoMistakes(_ level: String) {
         switch (level) {
         case "Easy":
@@ -201,4 +199,130 @@ class ProfileModel {
     public static func getCustomGameWinWithNoMistakes() -> Int {
         UserDefaults.standard.customGameWinWithNoMistakes
     }
+    
+    
+    
+    // MARK: - STREAK
+    public static func countCurrentWinStreak(_ isWon: Bool) {
+        if (isWon) {
+            countUpCurrentWinStreak()
+            updateBestWinStreak(getCurrentWinStreak())
+        } else {
+            let streak = getCurrentWinStreak()
+            updateBestWinStreak(streak)
+            breakCurrentWinStreak()
+        }
+    }
+    
+    /// add one to the current win streak
+    private static func countUpCurrentWinStreak() {
+        UserDefaults.standard.winStreak += 1
+    }
+    /// break down the win streak (set winStreak to zero)
+    private static func breakCurrentWinStreak() {
+        UserDefaults.standard.winStreak = 0
+    }
+    /// get current win streak
+    public static func getCurrentWinStreak() -> Int {
+        UserDefaults.standard.winStreak
+    }
+    
+    /// update the best win streak
+    private static func updateBestWinStreak(_ streak: Int) {
+        UserDefaults.standard.bestStreak = UserDefaults.standard.bestStreak >= streak ? UserDefaults.standard.bestStreak : streak
+    }
+    /// get the best win streak
+    public static func getBestWinStreak() -> Int {
+        UserDefaults.standard.bestStreak
+    }
+    
+    
+    // MARK: - TIME
+    public static func updateTime(_ level: String, _ seconds: Double) {
+        switch (level) {
+        case "Easy":
+            easyGameUpdateTime(seconds)
+            break;
+        case "Medium":
+            mediumGameUpdateTime(seconds)
+            break;
+        case "Hard":
+            hardGameUpdateTime(seconds)
+            break;
+        case "Expert":
+            customGameUpdateTime(seconds)
+            break;
+        default:
+            break;
+            
+        }
+    }
+    
+    private static func easyGameUpdateTime(_ seconds: Double) {
+        UserDefaults.standard.easyGameAveTime += seconds
+        if (getEasyGameBestTime() > seconds || getEasyGameBestTime() == 0) {
+            easyGameUpdateBestTime(seconds)
+        }
+    }
+    private static func easyGameUpdateBestTime(_ seconds: Double) {
+        UserDefaults.standard.easyGameBestTime = seconds
+    }
+    public static func getEasyGameBestTime() -> Double {
+        UserDefaults.standard.easyGameBestTime
+    }
+    public static func getEasyGameAveTime() -> Double {
+        UserDefaults.standard.easyGameAveTime
+    }
+    
+    
+    private static func mediumGameUpdateTime(_ seconds: Double) {
+        UserDefaults.standard.mediumGameAveTime += seconds
+        if (getMediumGameBestTime() > seconds || getMediumGameBestTime() == 0) {
+            mediumGameUpdateBestTime(seconds)
+        }
+    }
+    private static func mediumGameUpdateBestTime(_ seconds: Double) {
+        UserDefaults.standard.mediumGameBestTime = seconds
+    }
+    public static func getMediumGameBestTime() -> Double {
+        UserDefaults.standard.mediumGameBestTime
+    }
+    public static func getMediumGameAveTime() -> Double {
+        UserDefaults.standard.mediumGameAveTime
+    }
+    
+    
+    private static func hardGameUpdateTime(_ seconds: Double) {
+        UserDefaults.standard.hardGameAveTime += seconds
+        if (getHardGameBestTime() > seconds || getHardGameBestTime() == 0) {
+            hardGameUpdateBestTime(seconds)
+        }
+    }
+    private static func hardGameUpdateBestTime(_ seconds: Double) {
+        UserDefaults.standard.hardGameBestTime = seconds
+    }
+    public static func getHardGameBestTime() -> Double {
+        UserDefaults.standard.hardGameBestTime
+    }
+    public static func getHardGameAveTime() -> Double {
+        UserDefaults.standard.hardGameAveTime
+    }
+    
+    
+    private static func customGameUpdateTime(_ seconds: Double) {
+        UserDefaults.standard.customGameAveTime += seconds
+        if (getCustomGameBestTime() > seconds || getCustomGameBestTime() == 0) {
+            customGameUpdateBestTime(seconds)
+        }
+    }
+    private static func customGameUpdateBestTime(_ seconds: Double) {
+        UserDefaults.standard.customGameBestTime = seconds
+    }
+    public static func getCustomGameBestTime() -> Double {
+        UserDefaults.standard.customGameBestTime
+    }
+    public static func getCustomGameAveTime() -> Double {
+        UserDefaults.standard.customGameAveTime
+    }
+    
 }

@@ -309,7 +309,6 @@ class SudokuSolver {
             for num in 0...8 {
                 if (!nums_in_row[num]) {
                     let coords = checkOnlyPlaceForNumInRow(arr, num + 1, i)
-                    print(coords)
                     if (coords != (-1, -1)) {
                         number = num + 1
                         row = i

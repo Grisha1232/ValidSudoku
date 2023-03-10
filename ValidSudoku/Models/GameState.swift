@@ -10,10 +10,10 @@ import UIKit
 public struct GameState: Codable {
     private let levelString: String
     private let mistakesCount: Int
-    private let timer: Float
+    private let timer: Double
     private let fieldState: FieldState
     
-    init (levelString: String, mistakesCount: Int, timer: Float, fieldState: FieldState) {
+    init (levelString: String, mistakesCount: Int, timer: Double, fieldState: FieldState) {
         self.levelString = levelString
         self.mistakesCount = mistakesCount
         self.timer = timer
@@ -28,7 +28,7 @@ public struct GameState: Codable {
         levelString
     }
     
-    public func getTimer() -> Float {
+    public func getTimer() -> Double {
         timer
     }
     

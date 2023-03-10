@@ -72,6 +72,15 @@ extension UserDefaults {
     }
     
     
+    public var winStreak: Int {
+        get { Int(double(forKey: "winStreak")) }
+        set { set(newValue, forKey: "winStreak") }
+    }
+    public var bestStreak: Int {
+        get { Int(double(forKey: "bestStreak")) }
+        set { set(newValue, forKey: "bestStreak") }
+    }
+    
     public var easyGameStarted: Int {
         get { Int(double(forKey: "easyGameStarted")) }
         set { set(newValue, forKey: "easyGameStarted") }
@@ -83,6 +92,14 @@ extension UserDefaults {
     public var easyGameWinWithNoMistakes: Int {
         get { Int(double(forKey: "easyGameWinWNM")) }
         set { set(newValue, forKey: "easyGameWonWNM") }
+    }
+    public var easyGameAveTime: Double {
+        get { double(forKey: "easyGameAveTime") }
+        set { set(newValue, forKey: "easyGameAveTime") }
+    }
+    public var easyGameBestTime: Double {
+        get { double(forKey: "easyGameBestTime") }
+        set { set(newValue, forKey: "easyGameBestTime") }
     }
     
     
@@ -98,6 +115,14 @@ extension UserDefaults {
         get { Int(double(forKey: "mediumGameWinWNM")) }
         set { set(newValue, forKey: "mediumGameWonWNM") }
     }
+    public var mediumGameAveTime: Double {
+        get { double(forKey: "mediumGameAveTime") }
+        set { set(newValue, forKey: "mediumGameAveTime") }
+    }
+    public var mediumGameBestTime: Double {
+        get { double(forKey: "mediumGameBestTime") }
+        set { set(newValue, forKey: "mediumGameBestTime") }
+    }
     
     
     public var hardGameStarted: Int {
@@ -111,6 +136,14 @@ extension UserDefaults {
     public var hardGameWinWithNoMistakes: Int {
         get { Int(double(forKey: "hardGameWinWNM")) }
         set { set(newValue, forKey: "hardGameWonWNM") }
+    }
+    public var hardGameAveTime: Double {
+        get { double(forKey: "hardGameAveTime") }
+        set { set(newValue, forKey: "hardGameAveTime") }
+    }
+    public var hardGameBestTime: Double {
+        get { double(forKey: "hardGameBestTime") }
+        set { set(newValue, forKey: "hardGameBestTime") }
     }
     
     
@@ -126,6 +159,12 @@ extension UserDefaults {
         get { Int(double(forKey: "customGameWinWNM")) }
         set { set(newValue, forKey: "customGameWonWNM") }
     }
-    
-    
+    public var customGameAveTime: Double {
+        get { double(forKey: "customGameAveTime") }
+        set { set(newValue, forKey: "customGameAveTime") }
+    }
+    public var customGameBestTime: Double {
+        get { double(forKey: "customGameBestTime") }
+        set { set(newValue, forKey: "customGameBestTime") }
+    }
 }

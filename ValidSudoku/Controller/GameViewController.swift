@@ -16,7 +16,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
     /// decription on the top of the game field
     private let descriptionStackView = UIStackView()
     private var timer: Timer?
-    private var seconds: Float = 0
+    private var seconds: Double = 0
     private var levelGame: String
     private var mistakes: Int = 0
     
@@ -338,6 +338,9 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
     private func gameOverWithWin() {
         timer?.invalidate()
         ProfileModel.countUpGameWon(levelGame)
+        ProfileModel.countCurrentWinStreak(true)
+        ProfileModel.updateTime(levelGame, seconds)
+        SettingsModel.save(gameState: nil)
         if (mistakes == 0) {
             ProfileModel.countUpWinWithMoMistakes(levelGame)
         }
@@ -360,6 +363,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
     private func gameOverWithLoose() {
         timer?.invalidate()
         SettingsModel.save(gameState: nil)
+        ProfileModel.countCurrentWinStreak(false)
         navigationController?.popViewController(animated: true)
         let alert = UIAlertController(title: "Loose", message: "lol", preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Ok", style: .cancel))
@@ -370,7 +374,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
     // MARK: - @objc functions
     @objc private func updateTimeLabel() {
         seconds += 0.5
-        if (Float(Int(seconds)) - seconds == 0) {
+        if (Double(Int(seconds)) - seconds == 0) {
             let secs = Int(seconds)
             let label = self.descriptionStackView.subviews[2] as! UILabel
             let minutes: Int = secs / 60
@@ -426,6 +430,9 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
     }
     
     @objc private func hintButtonTapped(_ sender: UIButton) {
+        if (SettingsModel.isNoteOn()) {
+            noteButtonTapped(toolsStackView.subviews[2].subviews[0] as! UIButton)
+        }
         let answer: (num: Int, row: Int, col: Int)
         if (gameField.isNoMistakesInMatrix()) {
             answer = gameField.getHint()
@@ -437,6 +444,9 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
             let alert = UIAlertController(title: "We are not so smart to give you a hint by logic(", message: "But we can fill the note for you", preferredStyle: .actionSheet)
             navigationController?.present(alert, animated: true, completion: {
                 self.gameField.fillNotes()
+                self.gameSaver.save(state: GameState(levelString: self.levelGame, mistakesCount: self.mistakes, timer: self.seconds, fieldState: self.gameField.saveGame()))
+                sleep(1)
+                alert.dismiss(animated: true)
             })
             return
         }
