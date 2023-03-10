@@ -146,6 +146,9 @@ class MainViewController: UIViewController, ChangedColorProtocol {
     }
     
     @objc private func tappedContinueButton(_ sender: UIButton) {
+        if SettingsModel.isNoteOn() {
+            SettingsModel.switchNote()
+        }
         if let save = SettingsModel.getPrevGame() {
             let t: String = String(Int(save.getTimer()) / 60) + ":" + (Int(save.getTimer()) / 10 == 0 ? "0" + String(Int(save.getTimer())) : String(Int(save.getTimer()) % 60))
             let alert = UIAlertController(title: "u r gonna continue game",

@@ -351,7 +351,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         timer?.invalidate()
         navigationController?.popViewController(animated: true)
         gameSaver.save(state: GameState(levelString: levelGame, mistakesCount: mistakes, timer: seconds, fieldState: gameField.saveGame()))
-        SettingsModel.save(gameState: gameSaver.getPrevSave() ?? GameState(levelString: "none", mistakesCount: 0, timer: 0, fieldState: FieldState(field: [], preFilled: [], answerMatrix: [])))
+        SettingsModel.save(gameState: gameSaver.getPrevSave() ?? GameState(levelString: "none", mistakesCount: 0, timer: 0, fieldState: FieldState(field: [], preFilled: [], answerMatrix: [], fieldNote: [])))
         let alert = UIAlertController(title: "Saved", message: "lol", preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Ok", style: .cancel))
         navigationController?.present(alert, animated: true)
@@ -393,9 +393,11 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
             selectedRow = -1
         } else {
             let alert = UIAlertController(title: "There is no move you can undo", message: "oops", preferredStyle: .actionSheet)
+            
             navigationController?.present(alert, animated: true, completion: {
-                sleep(1)
-                alert.dismiss(animated: true)
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
+                    alert.dismiss(animated: true)
+                })
             })
         }
         
@@ -424,11 +426,19 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
     }
     
     @objc private func hintButtonTapped(_ sender: UIButton) {
+        let answer: (num: Int, row: Int, col: Int)
         if (gameField.isNoMistakesInMatrix()) {
-            gameField.getHint()
+            answer = gameField.getHint()
         } else {
             gameField.getRidOfInccorections()
-            gameField.getHint()
+            answer = gameField.getHint()
+        }
+        if (answer == (-1, -1, -1)) {
+            let alert = UIAlertController(title: "We are not so smart to give you a hint by logic(", message: "But we can fill the note for you", preferredStyle: .actionSheet)
+            navigationController?.present(alert, animated: true, completion: {
+                self.gameField.fillNotes()
+            })
+            return
         }
         digitsCount = gameField.countDigitInMatrix()
         var count = 0
@@ -473,6 +483,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
             }
         } else if (!selectedPreFilled && SettingsModel.isNoteOn() && selectedRow != -1) {
             gameField.setFieldMatrix(gameSquare: selectedSquare!, row: selectedRow, col: selectedCol, num: sender.tag)
+            gameSaver.save(state: GameState(levelString: levelGame, mistakesCount: mistakes, timer: seconds, fieldState: gameField.saveGame()))
         }
     }
     

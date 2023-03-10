@@ -14,11 +14,14 @@ class FieldState: Codable {
     private let preFilled: [[Bool]]
     /// answer for the game
     private let answerMatrix: [[Int]]
+    /// note information for the game
+    private let fieldNote: [[[Bool]?]]
 
-    init(field: [[Int]], preFilled: [[Bool]], answerMatrix: [[Int]]) {
+    init(field: [[Int]], preFilled: [[Bool]], answerMatrix: [[Int]], fieldNote: [[[Bool]?]]) {
         self.field = field
         self.preFilled = preFilled
         self.answerMatrix = answerMatrix
+        self.fieldNote = fieldNote
     }
     
     public func getField() -> [[Int]] {
@@ -31,5 +34,9 @@ class FieldState: Codable {
     
     public func getAnswer() -> [[Int]] {
         answerMatrix
+    }
+    
+    public func getNote() -> [[[Bool]?]] {
+        fieldNote
     }
 }

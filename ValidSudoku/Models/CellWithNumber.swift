@@ -149,14 +149,31 @@ final class cellWithNumber: UICollectionViewCell, ChangedColorProtocol {
     }
     
     /// configure cell after appearing on the screen
-    public func configureNumber(numb: Int, filled: Bool) {
+    public func configureNumber(numb: Int, filled: Bool, note: [Bool]?) {
         if (filled) {
             preFilled = true
             numberLabel.text = String(numb)
+            for i in 0...8 {
+                noteNumbersLabel[i].isHidden = true
+            }
         } else {
             preFilled = false
             if (numb == 0) {
                 numberLabel.text = ""
+                noteNumbers = note ?? []
+                if (note != nil) {
+                    for i in 0...8 {
+                        if (noteNumbers[i]) {
+                            noteNumbersLabel[i].isHidden = false
+                        } else {
+                            noteNumbersLabel[i].isHidden = true
+                        }
+                    }
+                } else {
+                    for i in 0...8 {
+                        noteNumbersLabel[i].isHidden = true
+                    }
+                }
             } else {
                 numberLabel.text = String(numb)
                 numberLabel.textColor = SettingsModel.getMainColor()

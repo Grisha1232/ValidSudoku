@@ -185,7 +185,49 @@ class SudokuSolver {
         }
     }
     
-    private func checkOnlyPlaceForNum(_ sq: [[Int]], _ num: Int, _ area_row: Int, _ area_col: Int) -> (row: Int, col: Int) {
+    private func checkOnlyPlaceForNumInCol(_ arr: [Int], _ num: Int, _ col: Int) -> (row: Int, col: Int) {
+        var line = arr
+        for i in 0...8 {
+            if (line[i] == 0 && !isValidPlace(row: i, col: col, num: num)) {
+                line[i] = -1
+            }
+        }
+        var count = 0
+        var coords_to_return = (-1, -1)
+        for i in 0...8 {
+            if (line[i] == 0) {
+                count += 1
+                coords_to_return = (i, col)
+            }
+         }
+        if (count == 1) {
+            return coords_to_return
+        }
+        return (-1, -1)
+    }
+    
+    private func checkOnlyPlaceForNumInRow(_ arr: [Int], _ num: Int, _ row: Int) -> (row: Int, col: Int) {
+        var line = arr
+        for i in 0...8 {
+            if (line[i] == 0 && !isValidPlace(row: row, col: i, num: num)) {
+                line[i] = -1
+            }
+        }
+        var count = 0
+        var coords_to_return = (-1, -1)
+        for i in 0...8 {
+            if (line[i] == 0) {
+                count += 1
+                coords_to_return = (row, i)
+            }
+        }
+        if (count == 1) {
+            return coords_to_return
+        }
+        return (-1, -1)
+    }
+    
+    private func checkOnlyPlaceForNumInSquare(_ sq: [[Int]], _ num: Int, _ area_row: Int, _ area_col: Int) -> (row: Int, col: Int) {
         var square = sq
         for i in 0...2 {
             for j in 0...2 {
@@ -242,7 +284,7 @@ class SudokuSolver {
                 }
                 for num in 0...8 {
                     if (!nums_in_square[num]) {
-                        let coords = checkOnlyPlaceForNum(square, num + 1, square_i, square_j)
+                        let coords = checkOnlyPlaceForNumInSquare(square, num + 1, square_i, square_j)
                         if (coords != (-1, -1)) {
                             number = num + 1
                             row = square_i * 3 + coords.row
@@ -251,7 +293,53 @@ class SudokuSolver {
                         }
                     }
                 }
-                
+
+            }
+        }
+        
+        // check in row
+        for i in 0...8 {
+            var nums_in_row = [false, false, false, false, false, false, false, false ,false]
+            let arr = matrix[i]
+            for j in 0...8 {
+                if (arr[j] != 0) {
+                    nums_in_row[arr[j] - 1] = true
+                }
+            }
+            for num in 0...8 {
+                if (!nums_in_row[num]) {
+                    let coords = checkOnlyPlaceForNumInRow(arr, num + 1, i)
+                    print(coords)
+                    if (coords != (-1, -1)) {
+                        number = num + 1
+                        row = i
+                        col = coords.col
+                        return
+                    }
+                }
+            }
+        }
+        
+        // check in column
+        for j in 0...8 {
+            var nums_in_col = [false, false, false, false, false, false, false, false, false]
+            var arr: [Int] = []
+            for i in 0...8 {
+                arr.append(matrix[i][j])
+                if (matrix[i][j] != 0) {
+                    nums_in_col[matrix[i][j] - 1] = true
+                }
+            }
+            for num in 0...8 {
+                if (!nums_in_col[num]) {
+                    let coords = checkOnlyPlaceForNumInCol(arr, num + 1, j)
+                    if (coords != (-1, -1)) {
+                        number = num + 1
+                        row = coords.row
+                        col = j
+                        return
+                    }
+                }
             }
         }
     }
