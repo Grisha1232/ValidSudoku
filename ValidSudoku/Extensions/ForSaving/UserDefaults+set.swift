@@ -51,6 +51,11 @@ extension UserDefaults {
         set { set(newValue, forKey: "darkMode")}
     }
     
+    public var isSystemThemeOn: Bool {
+        get { bool(forKey: "systemTheme") }
+        set { set(newValue, forKey: "systemTheme")}
+    }
+    
     public var isMistakesLimitSet: Bool {
         get { bool(forKey: "mistakesLimit") }
         set { set(newValue, forKey: "mistakesLimit") }

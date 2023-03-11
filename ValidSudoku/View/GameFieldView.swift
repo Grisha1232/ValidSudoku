@@ -123,9 +123,11 @@ final class GameFieldView: UIView, CellTappedProtocol, setNumbersProtocol {
                 let cell = c as! cellWithNumber
                 let indexSquare = collectionViewSquares.indexPath(for: square)!
                 let indexCell = (collectionViewSquares.cellForItem(at: indexSquare) as! GameFieldSquare).collectionViewCells.indexPath(for: cell)!
-                let numb = fieldMatrix[indexSquare.section * 3 + indexCell.section][indexSquare.row * 3 + indexCell.row]
-                let filled = preFilled[indexSquare.section * 3 + indexCell.section][indexSquare.row * 3 + indexCell.row]
-                let note = fieldNoteMatrix[indexSquare.section * 3 + indexCell.section][indexSquare.row * 3 + indexCell.row]
+                let row = indexSquare.section * 3 + indexCell.section
+                let col = indexSquare.row * 3 + indexCell.row
+                let numb = fieldMatrix[row][col]
+                let filled = preFilled[row][col]
+                let note = fieldNoteMatrix[row][col]
                 cell.configureNumber(numb: numb, filled: filled, note: note)
             }
         }
@@ -251,9 +253,11 @@ final class GameFieldView: UIView, CellTappedProtocol, setNumbersProtocol {
     /// Protocol function set numbers to cells after showing cells on the screen
     internal func setNumber(collectionView: UICollectionView, cell: cellWithNumber, indexPathWithNumb: IndexPath, cellInField: GameFieldSquare) {
         let indCellInField = collectionViewSquares.indexPath(for: cellInField)
-        let num = fieldMatrix[(indCellInField?.section ?? 0) * 3 + indexPathWithNumb.section][(indCellInField?.row ?? 0) * 3 + indexPathWithNumb.row]
-        let fill = preFilled[(indCellInField?.section ?? 0) * 3 + indexPathWithNumb.section][(indCellInField?.row ?? 0) * 3 + indexPathWithNumb.row]
-        let note = fieldNoteMatrix[(indCellInField?.section ?? 0) * 3 + indexPathWithNumb.section][(indCellInField?.row ?? 0) * 3 + indexPathWithNumb.row]
+        let row = (indCellInField?.section ?? 0) * 3 + indexPathWithNumb.section
+        let col = (indCellInField?.row ?? 0) * 3 + indexPathWithNumb.row
+        let num = fieldMatrix[row][col]
+        let fill = preFilled[row][col]
+        let note = fieldNoteMatrix[row][col]
         cell.configureNumber(numb: num, filled: fill, note: note)
     }
     
@@ -268,12 +272,12 @@ final class GameFieldView: UIView, CellTappedProtocol, setNumbersProtocol {
                     if (sq?.collectionViewCells.cellForItem(at: indexPath) == cell) {
                         delegate?.setRowAndColumnOfSelection(fieldCellSelected, collectionViewSquares.indexPath(for: sq!)!.section * 3 + indexPath.section, collectionViewSquares.indexPath(for: sq!)!.row * 3 + indexPath.row, (cell as! cellWithNumber).getPreFilled())
                         if ((cell as! cellWithNumber).isCorrectNumber()){
-                            cell.backgroundColor = SettingsModel.getMainColor().withAlphaComponent(0.5)
+                            cell.backgroundColor = SettingsModel.getMainColor().withAlphaComponent(0.7)
                         }
                         selectedNumber = (cell as? cellWithNumber)?.getNumber() ?? "0"
                     } else {
                         if ((cell as! cellWithNumber).isCorrectNumber()){
-                            cell.backgroundColor = SettingsModel.getMainColor().withAlphaComponent(0.2)
+                            cell.backgroundColor = SettingsModel.getMainColor().withAlphaComponent(0.4)
                         }
                     }
                 }
@@ -284,7 +288,7 @@ final class GameFieldView: UIView, CellTappedProtocol, setNumbersProtocol {
                     for k in 0..<3 {
                         let cell = sq?.collectionViewCells.cellForItem(at: IndexPath(row: indexPath.row, section: k))
                         if ((cell as? cellWithNumber)!.isCorrectNumber()){
-                            cell?.backgroundColor = SettingsModel.getMainColor().withAlphaComponent(0.2)
+                            cell?.backgroundColor = SettingsModel.getMainColor().withAlphaComponent(0.4)
                         }
                     }
                 }
@@ -292,7 +296,7 @@ final class GameFieldView: UIView, CellTappedProtocol, setNumbersProtocol {
                     for k in 0..<3 {
                         let cell = sq?.collectionViewCells.cellForItem(at: IndexPath(row: k, section: indexPath.section))
                         if ((cell as! cellWithNumber).isCorrectNumber()){
-                            cell?.backgroundColor = SettingsModel.getMainColor().withAlphaComponent(0.2)
+                            cell?.backgroundColor = SettingsModel.getMainColor().withAlphaComponent(0.4)
                         }
                     }
                 }
@@ -316,7 +320,7 @@ final class GameFieldView: UIView, CellTappedProtocol, setNumbersProtocol {
                 }
                 let c = (cell as! cellWithNumber)
                 if (c.getPreFilled()) {
-                    c.setColorText(color: SettingsModel.isDarkMode() ? .white : .label)
+                    c.setColorText(color: SettingsModel.getMainLabelColor())
                 } else {
                     c.setColorText(color: SettingsModel.getMainColor())
                 }
@@ -326,7 +330,7 @@ final class GameFieldView: UIView, CellTappedProtocol, setNumbersProtocol {
     
     /// set colors after changes
     internal func changeColor() {
-        layer.borderColor = SettingsModel.isDarkMode() ? CGColor(red: 1, green: 1, blue: 1, alpha: 1) : CGColor(red: 0, green: 0, blue: 0, alpha: 1)
+        layer.borderColor = SettingsModel.getSecondaryLabelColor().cgColor
         backgroundColor = SettingsModel.getMainBackgroundColor()
         for square in collectionViewSquares.visibleCells {
             (square as? GameFieldSquare)?.changeColor()
@@ -397,16 +401,16 @@ final class GameFieldView: UIView, CellTappedProtocol, setNumbersProtocol {
         for index in indexes {
             let gameSquare = collectionViewSquares.cellForItem(at: IndexPath(row: index.col / 3, section: index.row / 3)) as! GameFieldSquare
             let cell = gameSquare.collectionViewCells.cellForItem(at: IndexPath(row: index.col % 3, section: index.row % 3)) as! cellWithNumber
-            cell.backgroundColor = SettingsModel.getMainColor().withAlphaComponent(0.5)
+            cell.backgroundColor = SettingsModel.getMainColor().withAlphaComponent(0.7)
         }
         
         for c in fieldSquare.collectionViewCells.visibleCells {
             let cellPath = fieldSquare.collectionViewCells.indexPath(for: c as! cellWithNumber)
             let cell = c as! cellWithNumber
             if (cellPath!.section == coords.row % 3 && cellPath!.row == coords.col % 3) {
-                cell.backgroundColor = SettingsModel.getMainColor().withAlphaComponent(0.5)
+                cell.backgroundColor = SettingsModel.getMainColor().withAlphaComponent(0.7)
             } else {
-                cell.backgroundColor = SettingsModel.getMainColor().withAlphaComponent(0.2)
+                cell.backgroundColor = SettingsModel.getMainColor().withAlphaComponent(0.4)
             }
         }
     }
@@ -440,7 +444,7 @@ final class GameFieldView: UIView, CellTappedProtocol, setNumbersProtocol {
                 guard let cellWithNumber = cell as? cellWithNumber else {continue}
                 if (cellWithNumber.getNumber() == selectedNumber) {
                     if (cellWithNumber.isCorrectNumber()){
-                        cellWithNumber.backgroundColor = SettingsModel.getMainColor().withAlphaComponent(0.5)
+                        cellWithNumber.backgroundColor = SettingsModel.getMainColor().withAlphaComponent(0.7)
                     }
                 }
             }
@@ -455,11 +459,8 @@ final class GameFieldView: UIView, CellTappedProtocol, setNumbersProtocol {
                 if (!isEqualWithAnswerMatrix(i, j)) {
                     let cell = ((collectionViewSquares.cellForItem(at: IndexPath(row: j / 3, section: i / 3)) as! GameFieldSquare).collectionViewCells.cellForItem(at: IndexPath(row: j % 3, section: i % 3)) as! cellWithNumber)
                     cell.setIsCorrectNumb(false)
-                    cell.backgroundColor = SettingsModel.getIncorrectColor().withAlphaComponent(0.5)
+                    cell.backgroundColor = SettingsModel.getIncorrectColor().withAlphaComponent(0.7)
                     incorretNumbers.append([IndexPath(row: j / 3, section: i / 3), IndexPath(row: j % 3, section: i % 3)])
-                    if (!isUndo) {
-                        delegate?.countUpMistakes()
-                    }
                 } else {
                     let cell = ((collectionViewSquares.cellForItem(at: IndexPath(row: j / 3, section: i / 3)) as! GameFieldSquare).collectionViewCells.cellForItem(at: IndexPath(row: j % 3, section: i % 3)) as! cellWithNumber)
                     cell.setIsCorrectNumb(true)
@@ -518,8 +519,8 @@ final class GameFieldView: UIView, CellTappedProtocol, setNumbersProtocol {
     
     // MARK: - setup UI for view
     private func setupView() {
-        layer.borderColor = SettingsModel.isDarkMode() ? CGColor(red: 1, green: 1, blue: 1, alpha: 1) : CGColor(red: 0, green: 0, blue: 0, alpha: 1)
-        layer.borderWidth = 1
+        layer.borderColor = SettingsModel.getMainLabelColor().cgColor
+        layer.borderWidth = 1.5
         backgroundColor = SettingsModel.getMainBackgroundColor()
         collectionViewSquares.delegate = self
         collectionViewSquares.dataSource = self

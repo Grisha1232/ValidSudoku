@@ -15,7 +15,7 @@ extension UIButton {
         button.backgroundColor = SettingsModel.getMainColor()
         button.layer.cornerRadius = 16
         button.setTitle(title, for: .normal)
-        button.setTitleColor(SettingsModel.isDarkMode() ? .darkText : .white, for: .normal)
+        button.setTitleColor(SettingsModel.getMainLabelColor(), for: .normal)
         return button
     }
     

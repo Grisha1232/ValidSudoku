@@ -29,6 +29,11 @@ class MainViewController: UIViewController, ChangedColorProtocol {
         }
     }
     
+    
+    internal func appendToAppDelegate() {
+        
+    }
+    
     //MARK: - Setup UI functions
     private func setupUI() {
         view.backgroundColor = SettingsModel.getMainBackgroundColor()
@@ -64,7 +69,7 @@ class MainViewController: UIViewController, ChangedColorProtocol {
         navigationItem.leftBarButtonItems = [profileButton]
         navigationItem.rightBarButtonItems = [settingButton]
         navigationItem.title = "Valid Sudoku"
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: SettingsModel.isDarkMode() ? UIColor.white : UIColor.darkText]
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: SettingsModel.getMainLabelColor()]
     }
     
     /// Set the "new game" button
@@ -172,12 +177,12 @@ class MainViewController: UIViewController, ChangedColorProtocol {
     internal func changeColor() {
         view.backgroundColor = SettingsModel.getMainBackgroundColor()
         continueGameButton.backgroundColor = SettingsModel.getMainColor()
-        continueGameButton.setTitleColor(SettingsModel.isDarkMode() ? .darkText : .white, for: .normal)
+        continueGameButton.setTitleColor(SettingsModel.getMainLabelColor(), for: .normal)
         newGameButton.backgroundColor = SettingsModel.getMainColor()
-        newGameButton.setTitleColor(SettingsModel.isDarkMode() ? .darkText : .white, for: .normal)
+        newGameButton.setTitleColor(SettingsModel.getMainLabelColor(), for: .normal)
         for subView in levelGameButtons.subviews {
             subView.backgroundColor = SettingsModel.getMainColor()
-            (subView as! UIButton).setTitleColor(SettingsModel.isDarkMode() ? .darkText : .white, for: .normal)
+            (subView as! UIButton).setTitleColor(SettingsModel.getMainLabelColor(), for: .normal)
         }
         for navItem in navigationItem.leftBarButtonItems! {
             navItem.tintColor = SettingsModel.getMainColor()
@@ -185,7 +190,7 @@ class MainViewController: UIViewController, ChangedColorProtocol {
         for navItem in navigationItem.rightBarButtonItems! {
             navItem.tintColor = SettingsModel.getMainColor()
         }
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: SettingsModel.isDarkMode() ? UIColor.white : UIColor.darkText]
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: SettingsModel.getMainLabelColor()]
     }
 }
 

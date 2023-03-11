@@ -21,8 +21,12 @@ final class GameFieldSquare: UICollectionViewCell {
     internal let collectionViewCells = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     
     internal func changeColor() {
-        layer.borderColor = SettingsModel.isDarkMode() ? CGColor(red: 1, green: 1, blue: 1, alpha: 1) : CGColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        layer.borderColor = SettingsModel.getSecondaryLabelColor().cgColor
         backgroundColor = SettingsModel.getMainBackgroundColor()
+        for c in collectionViewCells.visibleCells {
+            let cell = c as! cellWithNumber
+            cell.changeColor()
+        }
     }
     
     // MARK: - init()
@@ -38,14 +42,13 @@ final class GameFieldSquare: UICollectionViewCell {
     
     // MARK: - setup UI
     private func setupView() {
-        layer.borderColor = SettingsModel.isDarkMode() ? CGColor(red: 1, green: 1, blue: 1, alpha: 1) : CGColor(red: 0, green: 0, blue: 0, alpha: 0.5)
-        layer.borderWidth = 0.5
+        layer.borderColor = SettingsModel.getSecondaryLabelColor().cgColor
+        layer.borderWidth = 1
         backgroundColor = SettingsModel.getMainBackgroundColor()
         collectionViewCells.dataSource = self
         collectionViewCells.delegate = self
         collectionViewCells.register(cellWithNumber.self, forCellWithReuseIdentifier: cellWithNumber.reuseIdentifier)
         addSubview(collectionViewCells)
-        collectionViewCells.backgroundColor = .white.withAlphaComponent(0.01)
         collectionViewCells.pin(to: self, [.top, .bottom, .right, .left])
         collectionViewCells.isScrollEnabled = false
     }

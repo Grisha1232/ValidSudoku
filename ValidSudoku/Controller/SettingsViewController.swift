@@ -50,6 +50,7 @@ class SettingsViewController: UIViewController, ChangedColorProtocol {
     
     /// protocol function for changing theme after tapping the button
     internal func changeColor() {
+        print("isDarkModeOn : \(SettingsModel.isDarkMode())")
         view.backgroundColor = SettingsModel.getMainBackgroundColor()
         for itemBtn in navigationItem.leftBarButtonItems! {
             itemBtn.tintColor = SettingsModel.getMainColor()
@@ -57,29 +58,34 @@ class SettingsViewController: UIViewController, ChangedColorProtocol {
         settingsView.backgroundColor = SettingsModel.getSecondaryBackgroundColor()
         colorSchemeView.backgroundColor = SettingsModel.getSecondaryBackgroundColor()
         colorSchemeBtn.setTitleColor(SettingsModel.getMainColor(), for: .normal)
-        settingsBtn.setTitleColor(SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel, for: .normal)
-        howToPlayBtn.setTitleColor(SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel, for: .normal)
+        settingsBtn.setTitleColor(SettingsModel.getSecondaryLabelColor(), for: .normal)
+        howToPlayBtn.setTitleColor(SettingsModel.getSecondaryLabelColor(), for: .normal)
         
         for view in settingsView.subviews {
             view.subviews[0].backgroundColor = SettingsModel.getMainBackgroundColor()
-            (view.subviews[0].subviews[1] as! UILabel).textColor = SettingsModel.isDarkMode() ? .white : .label
-            (view.subviews[1] as! UILabel).textColor = SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel
+            (view.subviews[0].subviews[1] as! UILabel).textColor = SettingsModel.isDarkMode() ? .white : .black
+            (view.subviews[1] as! UILabel).textColor = SettingsModel.getSecondaryLabelColor()
         }
         
         colorSchemeView.subviews[1].subviews[0].backgroundColor = SettingsModel.getMainBackgroundColor()
-        (colorSchemeView.subviews[1].subviews[0].subviews[1] as! UILabel).textColor = SettingsModel.isDarkMode() ? .white : .label
-        (colorSchemeView.subviews[1].subviews[1] as! UILabel).textColor = SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel
+        (colorSchemeView.subviews[1].subviews[0].subviews[1] as! UILabel).textColor = SettingsModel.getMainLabelColor()
+        (colorSchemeView.subviews[1].subviews[1] as! UILabel).textColor = SettingsModel.getSecondaryLabelColor()
+        colorSchemeView.subviews[2].subviews[0].backgroundColor = SettingsModel.getMainBackgroundColor()
+        (colorSchemeView.subviews[2].subviews[0].subviews[1] as! UILabel).textColor = SettingsModel.getMainLabelColor()
+        (colorSchemeView.subviews[2].subviews[1] as! UILabel).textColor = SettingsModel.getSecondaryLabelColor()
         
-        (colorSchemeView.subviews[0].subviews[1] as! UILabel).textColor = SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel
+        (colorSchemeView.subviews[0].subviews[1] as! UILabel).textColor = SettingsModel.getSecondaryLabelColor()
         colorSchemeView.subviews[0].subviews[0].backgroundColor = SettingsModel.getMainBackgroundColor()
-        (colorSchemeView.subviews[0].subviews[0].subviews[0] as! UILabel).textColor = SettingsModel.isDarkMode() ? .white : .label
+        (colorSchemeView.subviews[0].subviews[0].subviews[0] as! UILabel).textColor = SettingsModel.getMainLabelColor()
         
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: SettingsModel.getMainLabelColor()]
     }
     
     // MARK: - setup UI
     private func setupUI() {
         view.backgroundColor = SettingsModel.getMainBackgroundColor()
         navigationItem.title = "Settings"
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: SettingsModel.getMainLabelColor()]
         setupBarButton()
         // Switch between settings
         setupTabStackView()
@@ -133,7 +139,7 @@ class SettingsViewController: UIViewController, ChangedColorProtocol {
         
         colorSchemeBtn.tag = 1
         colorSchemeBtn.setTitle("Color Shceme", for: .normal)
-        colorSchemeBtn.setTitleColor(SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel, for: .normal)
+        colorSchemeBtn.setTitleColor(SettingsModel.getSecondaryLabelColor(), for: .normal)
         colorSchemeBtn.backgroundColor = .none
         colorSchemeBtn.addTarget(self, action: #selector(tabButtonTapped(_:)), for: .touchUpInside)
         tabStackView.addArrangedSubview(colorSchemeBtn)
@@ -143,7 +149,7 @@ class SettingsViewController: UIViewController, ChangedColorProtocol {
         
         howToPlayBtn.tag = 2
         howToPlayBtn.setTitle("How to play?", for: .normal)
-        howToPlayBtn.setTitleColor(SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel, for: .normal)
+        howToPlayBtn.setTitleColor(SettingsModel.getSecondaryLabelColor(), for: .normal)
         howToPlayBtn.backgroundColor = .none
         howToPlayBtn.addTarget(self, action: #selector(tabButtonTapped(_:)), for: .touchUpInside)
         tabStackView.addArrangedSubview(howToPlayBtn)
@@ -165,7 +171,7 @@ class SettingsViewController: UIViewController, ChangedColorProtocol {
         if (isOpenedfromTheGame) {
             (mistakesLimit.subviews[0].subviews[0] as! UISwitch).isEnabled = false
         }
-        mistakesLimit.pin(to: settingsView, [.top: 16, .right: 0, .left: 0])
+        mistakesLimit.pin(to: settingsView, [.top: 16, .right: 16, .left: 16])
         
         let indicateMistakes = UIView.makeLabelwithSwitcher(title: "Indicate mistakes", description: "indicates wether you made a mistake or not. if disabled, the mistakes will be shown after the game is over.", target: self, selector: #selector(switcherMistakesIndicateTapped(_:)), value: SettingsModel.isMistakesIndicates())
         settingsView.addSubview(indicateMistakes)
@@ -175,17 +181,17 @@ class SettingsViewController: UIViewController, ChangedColorProtocol {
         if (isOpenedfromTheGame) {
             (indicateMistakes.subviews[0].subviews[0] as! UISwitch).isEnabled = false
         }
-        indicateMistakes.pin(to: settingsView, [.right: 0, .left: 0])
+        indicateMistakes.pin(to: settingsView, [.right: 16, .left: 16])
         indicateMistakes.pinTop(to: mistakesLimit.bottomAnchor, 16)
         
         let autoRemoveNotes = UIView.makeLabelwithSwitcher(title: "Auto remove notes", description: "deletes notes if the numbers crossed", target: self, selector: #selector(switcherAutoRemoveNoteTapped(_:)), value: SettingsModel.isAutoRemoveNoteOn())
         settingsView.addSubview(autoRemoveNotes)
-        autoRemoveNotes.pin(to: settingsView, [.right: 0, .left: 0])
+        autoRemoveNotes.pin(to: settingsView, [.right: 16, .left: 16])
         autoRemoveNotes.pinTop(to: indicateMistakes.bottomAnchor, 16)
         
         let highlightNumbers = UIView.makeLabelwithSwitcher(title: "Highlight the same numbers", description: "Highlight the smae numbers and makes rows from them visible", target: self, selector: #selector(switcherHighlightingSameNumberTapped(_:)), value: SettingsModel.isHighlightingOn())
         settingsView.addSubview(highlightNumbers)
-        highlightNumbers.pin(to: settingsView, [.right: 0, .left: 0])
+        highlightNumbers.pin(to: settingsView, [.right: 16, .left: 16])
         highlightNumbers.pinTop(to: autoRemoveNotes.bottomAnchor, 16)
         
         settingsView.pin(to: view, [.bottom, .right, .left])
@@ -200,12 +206,20 @@ class SettingsViewController: UIViewController, ChangedColorProtocol {
         
         let colorPallete = UIView.makeColorView(target: self, selector: #selector(colorButtonTapped(_:)))
         colorSchemeView.addSubview(colorPallete)
-        colorPallete.pin(to: colorSchemeView, [.left: 0, .right: 0, .top: 16])
+        colorPallete.pin(to: colorSchemeView, [.left: 16, .right: 16, .top: 16])
+        
+        let useSystemTheme = UIView.makeLabelwithSwitcher(title: "System theme", description: "uses the system preference on the theme of the app", target: self, selector: #selector(switcherSystemThemeTapped(_:)), value: SettingsModel.isSystemThemeOn())
+        colorSchemeView.addSubview(useSystemTheme)
+        useSystemTheme.pin(to: colorSchemeView, [.right: 16, .left: 16])
+        useSystemTheme.pinTop(to: colorPallete.bottomAnchor, 16)
         
         let darkMode = UIView.makeLabelwithSwitcher(title: "Dark mode", description: "Switch to the dark mode if switcher is on, otherwise light mode", target: self, selector: #selector(switcherDarkModeTapped(_:)), value: SettingsModel.isDarkMode())
         colorSchemeView.addSubview(darkMode)
-        darkMode.pin(to: colorSchemeView, [.right, .left])
-        darkMode.pinTop(to: colorPallete.bottomAnchor, 16)
+        if (SettingsModel.isSystemThemeOn()) {
+            (darkMode.subviews[0].subviews[0] as! UISwitch).isEnabled = false
+        }
+        darkMode.pin(to: colorSchemeView, [.right: 16, .left: 16])
+        darkMode.pinTop(to: useSystemTheme.bottomAnchor, 16)
         
         colorSchemeView.pin(to: view, [.bottom, .right, .left])
         colorSchemeView.pinTop(to: tabStackView.bottomAnchor, 16)
@@ -272,6 +286,30 @@ class SettingsViewController: UIViewController, ChangedColorProtocol {
         SettingsModel.switchHighlighting()
     }
     
+    @objc private func switcherSystemThemeTapped(_ sender: UISwitch) {
+        SettingsModel.switchSystemTheme()
+        if (UITraitCollection.current.userInterfaceStyle == .dark) {
+            print("dark mode")
+        } else {
+            print("light mode")
+        }
+        if (SettingsModel.isSystemThemeOn() && UITraitCollection.current.userInterfaceStyle == .dark) {
+            (colorSchemeView.subviews[2].subviews[0].subviews[0] as! UISwitch).isEnabled = false
+            (colorSchemeView.subviews[2].subviews[0].subviews[0] as! UISwitch).isOn = true
+            if (!SettingsModel.isDarkMode()) {
+                SettingsModel.switchDarkMode()
+            }
+        } else if (SettingsModel.isSystemThemeOn() && UITraitCollection.current.userInterfaceStyle == .light) {
+            (colorSchemeView.subviews[2].subviews[0].subviews[0] as! UISwitch).isEnabled = false
+            (colorSchemeView.subviews[2].subviews[0].subviews[0] as! UISwitch).isOn = false
+            if (SettingsModel.isDarkMode()) {
+                SettingsModel.switchDarkMode()
+            }
+        } else {
+            (colorSchemeView.subviews[2].subviews[0].subviews[0] as! UISwitch).isEnabled = true
+        }
+    }
+    
     @objc private func switcherDarkModeTapped(_ sender: UISwitch) {
         SettingsModel.switchDarkMode()
     }
@@ -280,19 +318,19 @@ class SettingsViewController: UIViewController, ChangedColorProtocol {
         switch sender.tag {
         case 0:
             settingsBtn.setTitleColor(SettingsModel.getMainColor(), for: .normal)
-            colorSchemeBtn.setTitleColor(SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel, for: .normal)
-            howToPlayBtn.setTitleColor(SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel, for: .normal)
+            colorSchemeBtn.setTitleColor(SettingsModel.getSecondaryLabelColor(), for: .normal)
+            howToPlayBtn.setTitleColor(SettingsModel.getSecondaryLabelColor(), for: .normal)
             navigationItem.title = "Settings"
             showSettings()
         case 1:
-            settingsBtn.setTitleColor(SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel, for: .normal)
+            settingsBtn.setTitleColor(SettingsModel.getSecondaryLabelColor(), for: .normal)
             colorSchemeBtn.setTitleColor(SettingsModel.getMainColor(), for: .normal)
-            howToPlayBtn.setTitleColor(SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel, for: .normal)
+            howToPlayBtn.setTitleColor(SettingsModel.getSecondaryLabelColor(), for: .normal)
             navigationItem.title = "Scheme"
             showColorScheme()
         default:
-            settingsBtn.setTitleColor(SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel, for: .normal)
-            colorSchemeBtn.setTitleColor(SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel, for: .normal)
+            settingsBtn.setTitleColor(SettingsModel.getSecondaryLabelColor(), for: .normal)
+            colorSchemeBtn.setTitleColor(SettingsModel.getSecondaryLabelColor(), for: .normal)
             howToPlayBtn.setTitleColor(SettingsModel.getMainColor(), for: .normal)
             navigationItem.title = "How to play?"
             showHowToPlaye()

@@ -83,33 +83,33 @@ final class cellWithNumber: UICollectionViewCell, ChangedColorProtocol {
         if (isCorrectNumber()) {
             backgroundColor = SettingsModel.getMainBackgroundColor()
         }
-        layer.borderColor = SettingsModel.isDarkMode() ? CGColor(red: 1, green: 1, blue: 1, alpha: 0.5) : CGColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        layer.borderColor = SettingsModel.getSecondaryLabelColor().cgColor
         if (preFilled) {
-            numberLabel.textColor = SettingsModel.isDarkMode() ? .white : .label
+            numberLabel.textColor = SettingsModel.getMainLabelColor()
         } else {
             numberLabel.textColor = SettingsModel.getMainColor()
         }
         for i in 0...8 {
-            noteNumbersLabel[i].textColor = SettingsModel.isDarkMode() ? .lightGray : .gray
+            noteNumbersLabel[i].textColor = SettingsModel.getSecondaryLabelColor()
         }
     }
     
     // MARK: - setup UI
     private func setupView() {
-        layer.borderColor = SettingsModel.isDarkMode() ? CGColor(red: 1, green: 1, blue: 1, alpha: 0.5) : CGColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        layer.borderColor = SettingsModel.getSecondaryLabelColor().cgColor
         layer.borderWidth = 0.3
         addSubview(numberLabel)
         backgroundColor = SettingsModel.getMainBackgroundColor()
         backgroundView?.alpha = 0;
         numberLabel.pin(to: self, [.right, .left, .bottom, .top])
-        numberLabel.textColor = SettingsModel.isDarkMode() ? .white : .label
+        numberLabel.textColor = SettingsModel.getMainLabelColor()
         numberLabel.textAlignment = .center
         numberLabel.text = "0"
         numberLabel.font = .systemFont(ofSize: self.frame.width / 2)
         for i in 0...8 {
             addSubview(noteNumbersLabel[i])
             noteNumbersLabel[i].text = String(i + 1);
-            noteNumbersLabel[i].textColor = SettingsModel.isDarkMode() ? .lightGray : .gray
+            noteNumbersLabel[i].textColor = SettingsModel.getSecondaryLabelColor()
             noteNumbersLabel[i].font = .systemFont(ofSize: self.frame.width / 3)
             noteNumbersLabel[i].isHidden = true
         }

@@ -77,7 +77,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
     
     /// Protocol function for changing color after setting it in "SettingsViewController"
     internal func changeColor() {
-        view.backgroundColor = SettingsModel.getMainBackgroundColor()
+        view.backgroundColor = SettingsModel.getSecondaryBackgroundColor()
         for navItem in navigationItem.leftBarButtonItems! {
             navItem.tintColor = SettingsModel.getMainColor()
         }
@@ -97,11 +97,11 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         gameField.changeColor()
         
         for i in 0...2 {
-            (descriptionStackView.subviews[i] as! UILabel).textColor = SettingsModel.isDarkMode() ? .white : .label
+            (descriptionStackView.subviews[i] as! UILabel).textColor = SettingsModel.getMainLabelColor()
         }
         for i in 0...3 {
-            toolsStackView.subviews[i].subviews[0].tintColor = SettingsModel.isDarkMode() ? .white : .label
-            (toolsStackView.subviews[i].subviews[1] as! UILabel).textColor = SettingsModel.isDarkMode() ? .white : .label
+            toolsStackView.subviews[i].subviews[0].tintColor = SettingsModel.getMainLabelColor()
+            (toolsStackView.subviews[i].subviews[1] as! UILabel).textColor = SettingsModel.getMainLabelColor()
         }
         
     }
@@ -111,13 +111,14 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         let label = self.descriptionStackView.subviews[1] as! UILabel
         label.text = "Mistakes: " + String(mistakes) + (SettingsModel.isMistakesLimitSet() ? "/3" : "")
         if (SettingsModel.isMistakesLimitSet() && mistakes == 3) {
-            gameOverWithLoose()
+            gameOver(isGameWon: false)
         }
     }
     
     internal func saveBeforeExitApp() {
         gameSaver.save(state: GameState(levelString: levelGame, mistakesCount: mistakes, timer: seconds, fieldState: gameField.saveGame()))
         SettingsModel.save(gameState: gameSaver.getPrevSave())
+        gameField.changeColor()
     }
     
     
@@ -165,7 +166,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         
         let levelLabel = UILabel()
         levelLabel.text = levelGame
-        levelLabel.textColor = SettingsModel.isDarkMode() ? .white : .label
+        levelLabel.textColor = SettingsModel.getMainLabelColor()
         levelLabel.font = .systemFont(ofSize: view.frame.width / 23)
         levelLabel.textAlignment = .left
         descriptionStackView.addArrangedSubview(levelLabel)
@@ -173,7 +174,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         
         let mistakesCount = UILabel()
         mistakesCount.text = "Mistakes: " + String(mistakes) + (SettingsModel.isMistakesLimitSet() ? "/3" : "")
-        mistakesCount.textColor = SettingsModel.isDarkMode() ? .white : .label
+        mistakesCount.textColor = SettingsModel.getMainLabelColor()
         mistakesCount.font = .systemFont(ofSize: view.frame.width / 23)
         mistakesCount.textAlignment = .center
         descriptionStackView.addArrangedSubview(mistakesCount)
@@ -182,7 +183,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(updateTimeLabel), userInfo: nil, repeats: true)
         let timerLabel = UILabel()
         timerLabel.text = "time: 0:00"
-        timerLabel.textColor = SettingsModel.isDarkMode() ? .white : .label
+        timerLabel.textColor = SettingsModel.getMainLabelColor()
         timerLabel.font = .systemFont(ofSize: view.frame.width / 23)
         timerLabel.textAlignment = .right
         descriptionStackView.addArrangedSubview(timerLabel)
@@ -216,7 +217,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
 //            button.backgroundColor = SettingsModel.getSecondaryBackgroundColor()
             button.setBackgroundImage(tool, for: .normal)
             button.tag = i
-            button.tintColor = SettingsModel.isDarkMode() ? .white : .label
+            button.tintColor = SettingsModel.getMainLabelColor()
             
             if i == 0 {
                 toolLabel.text = "undo"
@@ -233,7 +234,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
             }
             i += 1
             toolLabel.textAlignment = .center
-            toolLabel.textColor = SettingsModel.isDarkMode() ? .white : .label
+            toolLabel.textColor = SettingsModel.getMainLabelColor()
             
             toolLabel.font = .systemFont(ofSize: 14)
             
@@ -285,7 +286,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         if (SettingsModel.isNoteOn()) {
             for numBtn in lineDigitsStackView.subviews {
                 let numb = numBtn as! UIButton
-                numb.setTitleColor(SettingsModel.isDarkMode() ? .white : .label, for: .normal)
+                numb.setTitleColor(SettingsModel.getMainLabelColor(), for: .normal)
                 numb.isEnabled = true
             }
         } else {
@@ -417,7 +418,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
                     (lineDigitsStackView.subviews[i] as! UIButton).setTitleColor(SettingsModel.getSecondaryBackgroundColor(), for: .normal)
                 } else {
                     (lineDigitsStackView.subviews[i] as! UIButton).isEnabled = true
-                    (lineDigitsStackView.subviews[i] as! UIButton).setTitleColor(SettingsModel.isNoteOn() ? .label : SettingsModel.getMainColor(), for: .normal)
+                    (lineDigitsStackView.subviews[i] as! UIButton).setTitleColor(SettingsModel.isNoteOn() ? SettingsModel.getSecondaryLabelColor() : SettingsModel.getMainColor(), for: .normal)
                 }
             }
             gameSaver.save(state: GameState(levelString: levelGame, mistakesCount: mistakes, timer: seconds, fieldState: gameField.saveGame()))

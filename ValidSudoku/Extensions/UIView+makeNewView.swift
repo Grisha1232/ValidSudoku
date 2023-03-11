@@ -22,32 +22,31 @@ extension UIView {
         mainView.addSubview(descriptionLabel)
         
         
-        settingView.layer.borderWidth = 0.5
-        settingView.layer.borderColor = CGColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        settingView.layer.cornerRadius = 15
         
         labelSetting.text = str
-        labelSetting.textColor = SettingsModel.isDarkMode() ? .white : .label
+        labelSetting.textColor = SettingsModel.getMainLabelColor()
         labelSetting.pin(to: settingView, [.left: 16, .top: 5, .bottom: 5])
         
         SettingsModel.appendTo(content: switcher)
         switcher.isOn = value
         switcher.onTintColor = SettingsModel.getMainColor()
-        switcher.pin(to: settingView, [.top: 5, .bottom: 5, .right: 16])
+        switcher.pin(to: settingView, [.top: 10, .bottom: 5, .right: 5])
         switcher.setWidth(60)
         switcher.addTarget(target, action: selector, for: .valueChanged)
         
         descriptionLabel.text = description
-        descriptionLabel.textColor = SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel
+        descriptionLabel.textColor = SettingsModel.getSecondaryLabelColor()
         descriptionLabel.numberOfLines = 0
         descriptionLabel.font = .systemFont(ofSize: 12)
         
         settingView.backgroundColor = SettingsModel.getMainBackgroundColor()
-        settingView.setHeight(40)
+        settingView.setHeight(50)
         
         settingView.pin(to: mainView, [.top, .right, .left])
         
         descriptionLabel.pin(to: mainView, [.bottom: 0, .right: 5, .left: 10])
-        descriptionLabel.pinTop(to: settingView.bottomAnchor)
+        descriptionLabel.pinTop(to: settingView.bottomAnchor, 5)
         
         return mainView
     }
@@ -58,7 +57,6 @@ extension UIView {
         let colorsStackView = UIStackView()
         let textLabel = UILabel()
         let descriptionLabel = UILabel()
-        descriptionLabel.tag = 123
         
         
         view.addSubview(tileView)
@@ -68,19 +66,18 @@ extension UIView {
         tileView.addSubview(colorsStackView)
         
         tileView.backgroundColor = SettingsModel.getMainBackgroundColor()
-        tileView.layer.borderWidth = 0.5
-        tileView.layer.borderColor = CGColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        tileView.layer.cornerRadius = 20
         tileView.pin(to: view, [.left, .right, .top])
         
         descriptionLabel.text = "Sets the default color of the app"
-        descriptionLabel.textColor = SettingsModel.isDarkMode() ? .lightGray : .secondaryLabel
+        descriptionLabel.textColor = SettingsModel.getSecondaryLabelColor()
         descriptionLabel.numberOfLines = 0
         descriptionLabel.font = .systemFont(ofSize: 12)
         descriptionLabel.pin(to: view, [.left: 10, .right: 5, .bottom: 0])
-        descriptionLabel.pinTop(to: tileView.bottomAnchor)
+        descriptionLabel.pinTop(to: tileView.bottomAnchor, 5)
         
         textLabel.text = "Change main color: "
-        textLabel.textColor = SettingsModel.isDarkMode() ? .white : .label
+        textLabel.textColor = SettingsModel.getMainLabelColor()
         textLabel.pin(to: tileView, [.right: 0, .left: 16, .top: 16])
         
         let blueBtn = UIButton.makeNewColorButton(color: .systemBlue)
@@ -107,6 +104,7 @@ extension UIView {
         colorsStackView.pinTop(to: textLabel.bottomAnchor, 16)
         colorsStackView.setHeight(30)
         
+        
         return view
     }
     
@@ -119,7 +117,7 @@ extension UIView {
         view.addSubview(SVStats)
         
         titleLabel.text = title
-        titleLabel.textColor = SettingsModel.isDarkMode() ? .white : .label
+        titleLabel.textColor = SettingsModel.getMainLabelColor()
         titleLabel.font = .systemFont(ofSize: 27)
         titleLabel.pin(to: view, [.top: 0, .left: 32, .right: 0])
         
@@ -139,13 +137,13 @@ extension UIView {
             statView.addSubview(statLabel)
             
             subTitleLabel.text = subTitle
-            subTitleLabel.textColor = SettingsModel.isDarkMode() ? .white : .label
+            subTitleLabel.textColor = SettingsModel.getMainLabelColor()
             subTitleLabel.textAlignment = .right
             subTitleLabel.pin(to: statView, [.left: 32, .top: 16, .bottom: 16])
             subTitleLabel.font = .systemFont(ofSize: 16)
             
             statLabel.text = stats[i]
-            statLabel.textColor = SettingsModel.isDarkMode() ? .white : .label
+            statLabel.textColor = SettingsModel.getMainLabelColor()
             statLabel.textAlignment = .right
             statLabel.pin(to: statView, [.right: 32, .top: 16, .bottom: 16])
             statLabel.font = .systemFont(ofSize: 20)

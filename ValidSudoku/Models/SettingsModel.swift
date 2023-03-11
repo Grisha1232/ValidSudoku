@@ -88,6 +88,16 @@ class SettingsModel {
         .systemRed
     }
     
+    public static func isSystemThemeOn() -> Bool {
+        UserDefaults.standard.isSystemThemeOn
+    }
+    public static func switchSystemTheme() {
+        UserDefaults.standard.isSystemThemeOn.toggle()
+        for delegate in delegates {
+            delegate.changeColor()
+        }
+    }
+    
     /// get is it dark mode or not
     public static func isDarkMode() -> Bool {
         UserDefaults.standard.isDarkMode
@@ -100,20 +110,52 @@ class SettingsModel {
         }
     }
     
+    public static func getMainLabelColor() -> UIColor {
+        if (isSystemThemeOn()) {
+            return .label
+        } else if (isDarkMode()) {
+            return .white
+        } else {
+            return .black
+        }
+    }
+    
+    public static func getSecondaryLabelColor() -> UIColor {
+        if (isSystemThemeOn()) {
+            return .secondaryLabel
+        } else if (isDarkMode()) {
+            return .lightGray
+        } else {
+            return .gray
+        }
+    }
+    
     /// main background color. Depends on the dark mode
     public static func getMainBackgroundColor() -> UIColor {
-        if (isDarkMode()) {
-            return .init(red: 24 / 255, green: 24 / 255, blue: 24 / 255, alpha: 1)
+        if (isSystemThemeOn()) {
+            if (UITraitCollection.current.userInterfaceStyle == .dark) {
+                return .secondarySystemBackground
+            } else {
+                return .systemBackground
+            }
+        } else if isDarkMode() {
+            return .init(red: 28 / 255, green: 28 / 255, blue: 30 / 255, alpha: 1)
         } else {
             return .white
         }
     }
     /// secondary background color. Depends on the dark mode
     public static func getSecondaryBackgroundColor() -> UIColor {
-        if (isDarkMode()) {
-            return .init(red: 36 / 255, green: 38 / 255, blue: 41 / 255, alpha: 1)
+        if (isSystemThemeOn()) {
+            if (UITraitCollection.current.userInterfaceStyle == .dark) {
+                return .systemBackground
+            } else {
+                return .secondarySystemBackground
+            }
+        } else if (isDarkMode()) {
+            return .init(red: 0, green: 0, blue: 0, alpha: 1)
         } else {
-            return UIColor.secondarySystemBackground
+            return .init(red: 242 / 255, green: 242 / 255, blue: 247 / 255, alpha: 1)
         }
     }
     

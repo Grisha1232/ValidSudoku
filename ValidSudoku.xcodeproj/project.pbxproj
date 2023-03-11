@@ -37,7 +37,8 @@
 		C3C958A92983E6CF0091B377 /* setNumbersProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C958A82983E6CF0091B377 /* setNumbersProtocol.swift */; };
 		C3D18CF92995701D008A4CAC /* SudokuSolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D18CF82995701D008A4CAC /* SudokuSolver.swift */; };
 		C3D18CFB29959479008A4CAC /* setSelectionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D18CFA29959479008A4CAC /* setSelectionProtocol.swift */; };
-		C3D866F429801FD000CA336D /* CellForGameField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D866F329801FD000CA336D /* CellForGameField.swift */; };
+		C3D1FFE029BBD45E00578075 /* appendBeforeResingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D1FFDF29BBD45E00578075 /* appendBeforeResingProtocol.swift */; };
+		C3D866F429801FD000CA336D /* GameFieldSquare.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D866F329801FD000CA336D /* GameFieldSquare.swift */; };
 		C3D866F62980236200CA336D /* CellWithNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D866F52980236200CA336D /* CellWithNumber.swift */; };
 /* End PBXBuildFile section */
 
@@ -74,7 +75,8 @@
 		C3C958A82983E6CF0091B377 /* setNumbersProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = setNumbersProtocol.swift; sourceTree = "<group>"; };
 		C3D18CF82995701D008A4CAC /* SudokuSolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SudokuSolver.swift; sourceTree = "<group>"; };
 		C3D18CFA29959479008A4CAC /* setSelectionProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = setSelectionProtocol.swift; sourceTree = "<group>"; };
-		C3D866F329801FD000CA336D /* CellForGameField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellForGameField.swift; sourceTree = "<group>"; };
+		C3D1FFDF29BBD45E00578075 /* appendBeforeResingProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = appendBeforeResingProtocol.swift; sourceTree = "<group>"; };
+		C3D866F329801FD000CA336D /* GameFieldSquare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameFieldSquare.swift; sourceTree = "<group>"; };
 		C3D866F52980236200CA336D /* CellWithNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellWithNumber.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -157,7 +159,7 @@
 			isa = PBXGroup;
 			children = (
 				C360DE0E298B248700D5A192 /* SettingsModel.swift */,
-				C3D866F329801FD000CA336D /* CellForGameField.swift */,
+				C3D866F329801FD000CA336D /* GameFieldSquare.swift */,
 				C3D866F52980236200CA336D /* CellWithNumber.swift */,
 				C367FC37298CEB8400516A1F /* GeneratorOfMatrix.swift */,
 				C3D18CF82995701D008A4CAC /* SudokuSolver.swift */,
@@ -189,6 +191,7 @@
 				C360DE19298B2A0700D5A192 /* changedColorProtocol.swift */,
 				C3D18CFA29959479008A4CAC /* setSelectionProtocol.swift */,
 				C32CB4AF29B23EC400EBF0C0 /* SaveBeforeExitProtocol.swift */,
+				C3D1FFDF29BBD45E00578075 /* appendBeforeResingProtocol.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -275,7 +278,7 @@
 				C32CB4AE29B1FE6700EBF0C0 /* FieldState.swift in Sources */,
 				C382B7F9297576E1002A07AB /* ProfileViewController.swift in Sources */,
 				C39C637C2987DECA00937D22 /* UIView+makeNewView.swift in Sources */,
-				C3D866F429801FD000CA336D /* CellForGameField.swift in Sources */,
+				C3D866F429801FD000CA336D /* GameFieldSquare.swift in Sources */,
 				C32CB4AA29B1FACE00EBF0C0 /* GameSaver.swift in Sources */,
 				C3D18CF92995701D008A4CAC /* SudokuSolver.swift in Sources */,
 				C3B2387329B60F8D00634682 /* ProfileModel.swift in Sources */,
@@ -289,6 +292,7 @@
 				C32CB4AC29B1FAF800EBF0C0 /* GameState.swift in Sources */,
 				C360DE1C298B33B200D5A192 /* UISwitcher+changeColor.swift in Sources */,
 				C32CB4B029B23EC400EBF0C0 /* SaveBeforeExitProtocol.swift in Sources */,
+				C3D1FFE029BBD45E00578075 /* appendBeforeResingProtocol.swift in Sources */,
 				C360DE11298B26A800D5A192 /* UIColor+extentions.swift in Sources */,
 				C360DE13298B26C700D5A192 /* Data+extention.swift in Sources */,
 				C382B7F0297545CF002A07AB /* SettingsViewController.swift in Sources */,
@@ -349,7 +353,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -366,7 +370,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
 			name = Debug;
 		};
@@ -408,6 +412,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -437,15 +442,17 @@
 				INFOPLIST_FILE = ValidSudoku/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = HSE.ValidSudoku;
+				OTHER_SWIFT_FLAGS = "-Xfrontend -warn-long-expression-type-checking=200 -Xfrontend -warn-long-function-bodies=200";
+				PRODUCT_BUNDLE_IDENTIFIER = hse.grigory.seleznev.valid.sudoku;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -467,15 +474,16 @@
 				INFOPLIST_FILE = ValidSudoku/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = HSE.ValidSudoku;
+				PRODUCT_BUNDLE_IDENTIFIER = hse.grigory.seleznev.valid.sudoku;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
