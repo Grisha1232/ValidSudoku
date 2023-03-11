@@ -39,6 +39,10 @@ class SettingsViewController: UIViewController, ChangedColorProtocol {
         setupUI()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+    
     init(isOpenedFromTheGame: Bool) {
         self.isOpenedfromTheGame = isOpenedFromTheGame
         super.init(nibName: nil, bundle: nil)
@@ -50,7 +54,7 @@ class SettingsViewController: UIViewController, ChangedColorProtocol {
     
     /// protocol function for changing theme after tapping the button
     internal func changeColor() {
-        print("isDarkModeOn : \(SettingsModel.isDarkMode())")
+        view.window?.changeColor()
         view.backgroundColor = SettingsModel.getMainBackgroundColor()
         for itemBtn in navigationItem.leftBarButtonItems! {
             itemBtn.tintColor = SettingsModel.getMainColor()
@@ -118,6 +122,7 @@ class SettingsViewController: UIViewController, ChangedColorProtocol {
         scrollView.showsHorizontalScrollIndicator = false
         
         tabStackView.pinHeight(to: scrollView.heightAnchor)
+        tabStackView.layer.cornerRadius = 20
         scrollView.delegate = self
         scrollView.bounces = false
         
@@ -312,6 +317,11 @@ class SettingsViewController: UIViewController, ChangedColorProtocol {
     
     @objc private func switcherDarkModeTapped(_ sender: UISwitch) {
         SettingsModel.switchDarkMode()
+        if (SettingsModel.isDarkMode()) {
+            view.overrideUserInterfaceStyle = .dark
+        } else {
+            view.overrideUserInterfaceStyle = .light
+        }
     }
     
     @objc private func tabButtonTapped(_ sender: UIButton) {

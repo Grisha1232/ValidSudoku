@@ -80,6 +80,7 @@ final class cellWithNumber: UICollectionViewCell, ChangedColorProtocol {
     
     
     internal func changeColor() {
+        self.window?.changeColor()
         if (isCorrectNumber()) {
             backgroundColor = SettingsModel.getMainBackgroundColor()
         }

@@ -46,6 +46,16 @@ extension UserDefaults {
         set { set(newValue, forKey: "mainColor") }
     }
     
+    public var mainFieldColor: UIColor? {
+        get { color(forKey: "mainFieldColor") }
+        set { set(newValue, forKey: "mainFieldColor")}
+    }
+    
+    public var secondaryFieldColor: UIColor? {
+        get { color(forKey: "secondaryFieldColor") }
+        set { set(newValue, forKey: "secondaryFieldColor") }
+    }
+    
     public var isDarkMode: Bool {
         get { bool(forKey: "darkMode") }
         set { set(newValue, forKey: "darkMode")}

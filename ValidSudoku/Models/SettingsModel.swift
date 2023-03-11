@@ -11,10 +11,27 @@ import CoreData
 // MARK: - SettingsModel
 class SettingsModel {
     
+    private static let grayForDark = UIColor.init(red: 25 / 255, green: 25 / 255, blue: 27 / 255, alpha: 1)
+    private static let grayForLight = UIColor.init(red: 242 / 255, green: 242 / 255, blue: 247 / 255, alpha: 1)
+    
     /// delegate to the Protocol that changing main color in the app
     private static var delegates: [ChangedColorProtocol] = []
     public static func appendTo(content: ChangedColorProtocol) {
         delegates.append(content)
+    }
+    public static func changeColors() {
+        if (UITraitCollection.current.userInterfaceStyle == .dark) {
+            if (!isDarkMode()) {
+                switchDarkMode()
+            }
+        } else {
+            if isDarkMode() {
+                switchDarkMode()
+            }
+        }
+        for del in delegates {
+            del.changeColor()
+        }
     }
     
     // MARK: - After game
@@ -88,6 +105,7 @@ class SettingsModel {
         .systemRed
     }
     
+    
     public static func isSystemThemeOn() -> Bool {
         UserDefaults.standard.isSystemThemeOn
     }
@@ -111,9 +129,7 @@ class SettingsModel {
     }
     
     public static func getMainLabelColor() -> UIColor {
-        if (isSystemThemeOn()) {
-            return .label
-        } else if (isDarkMode()) {
+        if (isDarkMode()) {
             return .white
         } else {
             return .black
@@ -121,9 +137,7 @@ class SettingsModel {
     }
     
     public static func getSecondaryLabelColor() -> UIColor {
-        if (isSystemThemeOn()) {
-            return .secondaryLabel
-        } else if (isDarkMode()) {
+        if (isDarkMode()) {
             return .lightGray
         } else {
             return .gray
@@ -139,7 +153,7 @@ class SettingsModel {
                 return .systemBackground
             }
         } else if isDarkMode() {
-            return .init(red: 28 / 255, green: 28 / 255, blue: 30 / 255, alpha: 1)
+            return grayForDark
         } else {
             return .white
         }
@@ -153,9 +167,9 @@ class SettingsModel {
                 return .secondarySystemBackground
             }
         } else if (isDarkMode()) {
-            return .init(red: 0, green: 0, blue: 0, alpha: 1)
+            return .black
         } else {
-            return .init(red: 242 / 255, green: 242 / 255, blue: 247 / 255, alpha: 1)
+            return grayForLight
         }
     }
     

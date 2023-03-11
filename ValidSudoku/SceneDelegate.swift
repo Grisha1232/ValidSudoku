@@ -10,12 +10,15 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    var delegateAppedBeforeResing:  [appendBeforeResingProtocol] = []
-    var delegateChangeColors: [ChangedColorProtocol] = []
-    public func appendTo(del: ChangedColorProtocol) {
-        self.delegateChangeColors.append(del)
+    
+    public func changeColor() {
+        if SettingsModel.isDarkMode() {
+            window?.overrideUserInterfaceStyle = .dark
+        } else {
+            window?.overrideUserInterfaceStyle = .light
+        }
+        SettingsModel.changeColors()
     }
-
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -44,22 +47,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
         print("did become active")
         (UIApplication.shared.delegate as? AppDelegate)?.delegate?.saveBeforeExitApp()
-        for del in delegateChangeColors {
-            del.changeColor()
-        }
-        
+        changeColor()
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
         // Called when the scene will move from an active state to an inactive state.
         // This may occur due to temporary interruptions (ex. an incoming phone call).
         print("will resign active")
+        (UIApplication.shared.delegate as? AppDelegate)?.delegate?.saveBeforeExitApp()
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
         // Called as the scene transitions from the background to the foreground.
         // Use this method to undo the changes made on entering the background.
         print("will enter foreground")
+        changeColor()
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {

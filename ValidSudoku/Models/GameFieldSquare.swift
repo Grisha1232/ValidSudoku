@@ -21,6 +21,7 @@ final class GameFieldSquare: UICollectionViewCell {
     internal let collectionViewCells = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     
     internal func changeColor() {
+        self.window?.changeColor()
         layer.borderColor = SettingsModel.getSecondaryLabelColor().cgColor
         backgroundColor = SettingsModel.getMainBackgroundColor()
         for c in collectionViewCells.visibleCells {

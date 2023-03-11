@@ -138,7 +138,6 @@ class SudokuSolver {
     }
     
     public func getSudokuMatrix(_ neededDifficult: Int) -> [[Int]] {
-        let solver = SudokuSolver(matrix: matrix)
         var difficult = 81
         for k in 0..<81 {
             let x = randPos[k] / 9, y = randPos[k] % 9
@@ -146,10 +145,8 @@ class SudokuSolver {
             matrix[x][y] = 0
             difficult -= 1
             
-            solver.setMatrix(matrix: matrix)
-            
             var check = 0
-            solver.countSoln(number: &check)
+            countSoln(number: &check)
             
             if (check != 1) {
                 matrix[x][y] = temp

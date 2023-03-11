@@ -330,6 +330,7 @@ final class GameFieldView: UIView, CellTappedProtocol, setNumbersProtocol {
     
     /// set colors after changes
     internal func changeColor() {
+        self.window?.changeColor()
         layer.borderColor = SettingsModel.getSecondaryLabelColor().cgColor
         backgroundColor = SettingsModel.getMainBackgroundColor()
         for square in collectionViewSquares.visibleCells {

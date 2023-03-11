@@ -40,6 +40,7 @@
 		C3D1FFE029BBD45E00578075 /* appendBeforeResingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D1FFDF29BBD45E00578075 /* appendBeforeResingProtocol.swift */; };
 		C3D866F429801FD000CA336D /* GameFieldSquare.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D866F329801FD000CA336D /* GameFieldSquare.swift */; };
 		C3D866F62980236200CA336D /* CellWithNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D866F52980236200CA336D /* CellWithNumber.swift */; };
+		C3E244F829BCE3B700C51C5A /* UIWindow+changeColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E244F729BCE3B700C51C5A /* UIWindow+changeColor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,6 +79,7 @@
 		C3D1FFDF29BBD45E00578075 /* appendBeforeResingProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = appendBeforeResingProtocol.swift; sourceTree = "<group>"; };
 		C3D866F329801FD000CA336D /* GameFieldSquare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameFieldSquare.swift; sourceTree = "<group>"; };
 		C3D866F52980236200CA336D /* CellWithNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellWithNumber.swift; sourceTree = "<group>"; };
+		C3E244F729BCE3B700C51C5A /* UIWindow+changeColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+changeColor.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,6 +181,7 @@
 				C39C637B2987DECA00937D22 /* UIView+makeNewView.swift */,
 				C360DE16298B26FB00D5A192 /* ForSaving */,
 				C360DE1B298B33B200D5A192 /* UISwitcher+changeColor.swift */,
+				C3E244F729BCE3B700C51C5A /* UIWindow+changeColor.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -293,6 +296,7 @@
 				C360DE1C298B33B200D5A192 /* UISwitcher+changeColor.swift in Sources */,
 				C32CB4B029B23EC400EBF0C0 /* SaveBeforeExitProtocol.swift in Sources */,
 				C3D1FFE029BBD45E00578075 /* appendBeforeResingProtocol.swift in Sources */,
+				C3E244F829BCE3B700C51C5A /* UIWindow+changeColor.swift in Sources */,
 				C360DE11298B26A800D5A192 /* UIColor+extentions.swift in Sources */,
 				C360DE13298B26C700D5A192 /* Data+extention.swift in Sources */,
 				C382B7F0297545CF002A07AB /* SettingsViewController.swift in Sources */,

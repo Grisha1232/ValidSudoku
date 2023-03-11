@@ -66,6 +66,10 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         setupUI()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+    
     // MARK: - Control functions
     /// Set the state fof the selection
     internal func setRowAndColumnOfSelection(_ gameSquare: GameFieldSquare, _ row: Int, _ col: Int, _ preFilled: Bool) {
@@ -77,6 +81,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
     
     /// Protocol function for changing color after setting it in "SettingsViewController"
     internal func changeColor() {
+        view.window?.changeColor()
         view.backgroundColor = SettingsModel.getSecondaryBackgroundColor()
         for navItem in navigationItem.leftBarButtonItems! {
             navItem.tintColor = SettingsModel.getMainColor()
@@ -320,9 +325,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
                 (sub.subviews[1] as! UILabel).text = "over"
             }
             print("LOOSER")
-            if (!SettingsModel.isMistakesIndicates()) {
-                gameField.showMistakesAfterGame()
-            }
+            gameField.showMistakesAfterGame()
             let alert = UIAlertController(title: "Do you wnat to restart the game?", message: "There are mistakes maden", preferredStyle: .actionSheet)
             let actionYes = UIAlertAction(title: "Yes", style: .default, handler: {_ in
                 self.restartTheGame()

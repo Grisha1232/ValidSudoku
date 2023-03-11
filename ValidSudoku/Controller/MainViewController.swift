@@ -29,10 +29,10 @@ class MainViewController: UIViewController, ChangedColorProtocol {
         }
     }
     
-    
-    internal func appendToAppDelegate() {
-        
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
     }
+    
     
     //MARK: - Setup UI functions
     private func setupUI() {
@@ -175,6 +175,7 @@ class MainViewController: UIViewController, ChangedColorProtocol {
     }
     
     internal func changeColor() {
+        view.window?.changeColor()
         view.backgroundColor = SettingsModel.getMainBackgroundColor()
         continueGameButton.backgroundColor = SettingsModel.getMainColor()
         continueGameButton.setTitleColor(SettingsModel.getMainLabelColor(), for: .normal)
