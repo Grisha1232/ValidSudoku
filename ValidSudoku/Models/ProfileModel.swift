@@ -173,7 +173,7 @@ class ProfileModel {
     }
     
     private static func countUpEasyGameWinWithNoMistakes() {
-        UserDefaults.standard.easyGameWinWithNoMistakes += 1
+        UserDefaults.standard.easyGameWinWithNoMistakes = UserDefaults.standard.easyGameWinWithNoMistakes + 1
     }
     public static func getEasyGameWinWithNoMistakes() -> Int {
         UserDefaults.standard.easyGameWinWithNoMistakes

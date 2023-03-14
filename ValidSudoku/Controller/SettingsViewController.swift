@@ -54,6 +54,17 @@ class SettingsViewController: UIViewController, ChangedColorProtocol {
     
     /// protocol function for changing theme after tapping the button
     internal func changeColor() {
+        if (SettingsModel.isDarkMode()) {
+            view.overrideUserInterfaceStyle = .dark
+            settingsView.overrideUserInterfaceStyle = .dark
+            colorSchemeView.overrideUserInterfaceStyle = .dark
+            howToPlayView.overrideUserInterfaceStyle = .dark
+        } else {
+            view.overrideUserInterfaceStyle = .light
+            settingsView.overrideUserInterfaceStyle = .light
+            colorSchemeView.overrideUserInterfaceStyle = .light
+            howToPlayView.overrideUserInterfaceStyle = .light
+        }
         view.window?.changeColor()
         view.backgroundColor = SettingsModel.getMainBackgroundColor()
         for itemBtn in navigationItem.leftBarButtonItems! {
@@ -264,7 +275,6 @@ class SettingsViewController: UIViewController, ChangedColorProtocol {
     
     @objc private func switcherMistakesLimitTapped(_ sender: UISwitch) {
         SettingsModel.switchMistakesLimit()
-        print("\(SettingsModel.isMistakesLimitSet()) \(SettingsModel.isMistakesIndicates())")
         if (SettingsModel.isMistakesLimitSet() && !SettingsModel.isMistakesIndicates()) {
             (settingsView.subviews[1].subviews[0].subviews[0] as! UISwitch).setOn(true, animated: true)
             (settingsView.subviews[1].subviews[0].subviews[0] as! UISwitch).isOn = true
@@ -293,11 +303,6 @@ class SettingsViewController: UIViewController, ChangedColorProtocol {
     
     @objc private func switcherSystemThemeTapped(_ sender: UISwitch) {
         SettingsModel.switchSystemTheme()
-        if (UITraitCollection.current.userInterfaceStyle == .dark) {
-            print("dark mode")
-        } else {
-            print("light mode")
-        }
         if (SettingsModel.isSystemThemeOn() && UITraitCollection.current.userInterfaceStyle == .dark) {
             (colorSchemeView.subviews[2].subviews[0].subviews[0] as! UISwitch).isEnabled = false
             (colorSchemeView.subviews[2].subviews[0].subviews[0] as! UISwitch).isOn = true

@@ -20,11 +20,11 @@ class SettingsModel {
         delegates.append(content)
     }
     public static func changeColors() {
-        if (UITraitCollection.current.userInterfaceStyle == .dark) {
+        if (isSystemThemeOn() && UITraitCollection.current.userInterfaceStyle == .dark) {
             if (!isDarkMode()) {
                 switchDarkMode()
             }
-        } else {
+        } else if (isSystemThemeOn()) {
             if isDarkMode() {
                 switchDarkMode()
             }
@@ -180,6 +180,5 @@ class SettingsModel {
         for delegate in delegates {
             delegate.changeColor()
         }
-        print("SAVED")
     }
 }

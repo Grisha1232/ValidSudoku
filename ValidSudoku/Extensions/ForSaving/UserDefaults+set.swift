@@ -106,7 +106,7 @@ extension UserDefaults {
     }
     public var easyGameWinWithNoMistakes: Int {
         get { Int(double(forKey: "easyGameWinWNM")) }
-        set { set(newValue, forKey: "easyGameWonWNM") }
+        set { set(newValue, forKey: "easyGameWinWNM") }
     }
     public var easyGameAveTime: Double {
         get { double(forKey: "easyGameAveTime") }
@@ -128,7 +128,7 @@ extension UserDefaults {
     }
     public var mediumGameWinWithNoMistakes: Int {
         get { Int(double(forKey: "mediumGameWinWNM")) }
-        set { set(newValue, forKey: "mediumGameWonWNM") }
+        set { set(newValue, forKey: "mediumGameWinWNM") }
     }
     public var mediumGameAveTime: Double {
         get { double(forKey: "mediumGameAveTime") }
@@ -150,7 +150,7 @@ extension UserDefaults {
     }
     public var hardGameWinWithNoMistakes: Int {
         get { Int(double(forKey: "hardGameWinWNM")) }
-        set { set(newValue, forKey: "hardGameWonWNM") }
+        set { set(newValue, forKey: "hardGameWinWNM") }
     }
     public var hardGameAveTime: Double {
         get { double(forKey: "hardGameAveTime") }
@@ -172,7 +172,7 @@ extension UserDefaults {
     }
     public var customGameWinWithNoMistakes: Int {
         get { Int(double(forKey: "customGameWinWNM")) }
-        set { set(newValue, forKey: "customGameWonWNM") }
+        set { set(newValue, forKey: "customGameWinWNM") }
     }
     public var customGameAveTime: Double {
         get { double(forKey: "customGameAveTime") }

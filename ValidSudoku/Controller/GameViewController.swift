@@ -121,9 +121,11 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
     }
     
     internal func saveBeforeExitApp() {
-        gameSaver.save(state: GameState(levelString: levelGame, mistakesCount: mistakes, timer: seconds, fieldState: gameField.saveGame()))
-        SettingsModel.save(gameState: gameSaver.getPrevSave())
-        gameField.changeColor()
+        if (!gameField.isGameOver()) {
+            gameSaver.save(state: GameState(levelString: levelGame, mistakesCount: mistakes, timer: seconds, fieldState: gameField.saveGame()))
+            SettingsModel.save(gameState: gameSaver.getPrevSave())
+            gameField.changeColor()
+        }
     }
     
     
@@ -315,7 +317,6 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
     }
     
     private func gameOver(isGameWon: Bool) {
-        print("OVER")
         if (isGameWon) {
             gameOverWithWin()
         } else {
@@ -324,7 +325,6 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
                 (sub.subviews[0] as! UIButton).isHidden = true
                 (sub.subviews[1] as! UILabel).text = "over"
             }
-            print("LOOSER")
             gameField.showMistakesAfterGame()
             let alert = UIAlertController(title: "Do you wnat to restart the game?", message: "There are mistakes maden", preferredStyle: .actionSheet)
             let actionYes = UIAlertAction(title: "Yes", style: .default, handler: {_ in

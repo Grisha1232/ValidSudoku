@@ -197,22 +197,22 @@ class ProfileViewController: UIViewController {
         var result: [String] = []
         var games = 0
         if (filtersSet[0]) {
-            games += ProfileModel.getEasyGameStarted()
+            games += ProfileModel.getEasyGameWon()
             mass[0] += ProfileModel.getEasyGameAveTime()
             mass[1] = (mass[1] > ProfileModel.getEasyGameBestTime() && ProfileModel.getEasyGameBestTime() != 0) || mass[1] == 0 ? ProfileModel.getEasyGameBestTime() : mass[1]
         }
         if (filtersSet[1]) {
-            games += ProfileModel.getMediumGameStarted()
+            games += ProfileModel.getMediumGameWon()
             mass[0] += ProfileModel.getMediumGameAveTime()
             mass[1] = (mass[1] > ProfileModel.getMediumGameBestTime() && ProfileModel.getMediumGameBestTime() != 0) || mass[1] == 0 ? ProfileModel.getMediumGameBestTime() : mass[1]
         }
         if (filtersSet[2]) {
-            games += ProfileModel.getHardGamesStarted()
+            games += ProfileModel.getHardGamesWon()
             mass[0] += ProfileModel.getHardGameAveTime()
             mass[1] = (mass[1] > ProfileModel.getHardGameBestTime() && ProfileModel.getHardGameBestTime() != 0) || mass[1] == 0 ? ProfileModel.getHardGameBestTime() : mass[1]
         }
         if (filtersSet[3]) {
-            games += ProfileModel.getCustomGameStarted()
+            games += ProfileModel.getCustomGameWon()
             mass[0] += ProfileModel.getCustomGameAveTime()
             mass[1] = (mass[1] > ProfileModel.getCustomGameBestTime() && ProfileModel.getCustomGameBestTime() != 0) || mass[1] == 0 ? ProfileModel.getCustomGameBestTime() : mass[1]
         }
