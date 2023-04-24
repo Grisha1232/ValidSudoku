@@ -67,6 +67,35 @@ final class GameFieldView: UIView, CellTappedProtocol, setNumbersProtocol {
         setupView()
     }
     
+    init(fieldMatrix: [[Int]], answerMatrix: [[Int]]) {
+        self.collectionViewSquares = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        self.fieldMatrix = fieldMatrix
+        self.answerMatrix = answerMatrix
+        self.fieldNoteMatrix = Array(repeating: Array(repeating: Array(repeating: false, count: 9), count: 9), count: 9)
+        self.preFilled = Array(repeating: Array(repeating: false, count: 9), count: 9)
+        for i in 0..<9 {
+            for j in 0..<9 {
+                if (fieldMatrix[i][j] != 0) {
+                    preFilled[i][j] = true
+                }
+            }
+        }
+        self.solver = SudokuSolver(matrix: fieldMatrix)
+        super.init(frame: .zero)
+        setupView()
+    }
+    
+    init() {
+        self.collectionViewSquares = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        self.answerMatrix = Array(repeating: Array(repeating: 0, count: 9), count: 9)
+        self.fieldMatrix = Array(repeating: Array(repeating: 0, count: 9), count: 9)
+        self.preFilled = Array(repeating: Array(repeating: true, count: 9), count: 9)
+        self.solver = SudokuSolver(matrix: fieldMatrix)
+        self.fieldNoteMatrix = Array(repeating: Array(repeating: Array(repeating: false, count: 9), count: 9), count: 9)
+        super.init(frame: .zero)
+        setupView()
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -139,6 +168,10 @@ final class GameFieldView: UIView, CellTappedProtocol, setNumbersProtocol {
     
     public func isNoMistakesInMatrix() -> Bool {
         isNoMistakes
+    }
+    
+    public func getMatrix() -> [[Int]] {
+        fieldMatrix
     }
     
     internal func showMistakesAfterGame() {
@@ -421,7 +454,7 @@ final class GameFieldView: UIView, CellTappedProtocol, setNumbersProtocol {
         if (fieldMatrix[row][col] == 0) {
             return true
         } else {
-            return fieldMatrix[row][col] == answerMatrix[row][col]
+            return answerMatrix[row][col] == 0 || fieldMatrix[row][col] == answerMatrix[row][col]
         }
     }
     

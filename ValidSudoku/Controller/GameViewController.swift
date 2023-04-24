@@ -55,6 +55,13 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         super.init(nibName: nil, bundle: nil)
     }
     
+    init(field fieldMatrix: [[Int]], answer anwerMatrix: [[Int]]) {
+        self.levelGame = "Custom"
+        self.gameField = GameFieldView(fieldMatrix: fieldMatrix, answerMatrix: anwerMatrix)
+        self.gameSaver = GameSaver(state: GameState(levelString: self.levelGame, mistakesCount: mistakes, timer: seconds, fieldState: gameField.saveGame()))
+        super.init(nibName: nil, bundle: nil)
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -113,8 +120,10 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
     
     internal func countUpMistakes() {
         mistakes += 1
-        let label = self.descriptionStackView.subviews[1] as! UILabel
-        label.text = "Mistakes: " + String(mistakes) + (SettingsModel.isMistakesLimitSet() ? "/3" : "")
+        if (SettingsModel.isMistakesIndicates()) {
+            let label = self.descriptionStackView.subviews[1] as! UILabel
+            label.text = "Mistakes: " + String(mistakes) + (SettingsModel.isMistakesLimitSet() ? "/3" : "")
+        }
         if (SettingsModel.isMistakesLimitSet() && mistakes == 3) {
             gameOver(isGameWon: false)
         }
@@ -349,7 +358,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
             ProfileModel.countUpWinWithMoMistakes(levelGame)
         }
         navigationController?.popViewController(animated: true)
-        let alert = UIAlertController(title: "Win!", message: "lol", preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Win!", message: "Time: \(Int(seconds) / 60):\(Int(seconds) % 60 < 10 ? "0" : "" )\(Int(seconds) % 60)\nMistakes: \(mistakes)", preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Ok", style: .cancel))
         navigationController?.present(alert, animated: true)
     }
@@ -359,9 +368,6 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         navigationController?.popViewController(animated: true)
         gameSaver.save(state: GameState(levelString: levelGame, mistakesCount: mistakes, timer: seconds, fieldState: gameField.saveGame()))
         SettingsModel.save(gameState: gameSaver.getPrevSave() ?? GameState(levelString: "none", mistakesCount: 0, timer: 0, fieldState: FieldState(field: [], preFilled: [], answerMatrix: [], fieldNote: [])))
-        let alert = UIAlertController(title: "Saved", message: "lol", preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Ok", style: .cancel))
-        navigationController?.present(alert, animated: true)
     }
     
     private func gameOverWithLoose() {
@@ -369,7 +375,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         SettingsModel.save(gameState: nil)
         ProfileModel.countCurrentWinStreak(false)
         navigationController?.popViewController(animated: true)
-        let alert = UIAlertController(title: "Loose", message: "lol", preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Loose(", message: "", preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Ok", style: .cancel))
         navigationController?.present(alert, animated: true)
     }

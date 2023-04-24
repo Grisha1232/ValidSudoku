@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - MainViewController
-class MainViewController: UIViewController, ChangedColorProtocol {
+class MainViewController: UIViewController, ChangedColorProtocol, CreateCustomGameProtocol {
     
     
     // MARK: - Variables
@@ -31,6 +31,11 @@ class MainViewController: UIViewController, ChangedColorProtocol {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+    }
+    
+    internal func customGameCreate(field: [[Int]], answer: [[Int]]) {
+        let game = GameViewController(field: field, answer: answer)
+        navigationController?.pushViewController(game, animated: true)
     }
     
     
@@ -89,7 +94,7 @@ class MainViewController: UIViewController, ChangedColorProtocol {
         mediumButton.addTarget(self, action: #selector(tappedCreateGameButtons(_:)), for: .touchUpInside)
         let hardButton = UIButton.makeNewButton(title: "Hard")
         hardButton.addTarget(self, action: #selector(tappedCreateGameButtons(_:)), for: .touchUpInside)
-        let expertButton = UIButton.makeNewButton(title: "Expert")
+        let expertButton = UIButton.makeNewButton(title: "Custom")
         expertButton.addTarget(self, action: #selector(tappedCreateGameButtons(_:)), for: .touchUpInside)
         levelGameButtons.addArrangedSubview(easyButton)
         levelGameButtons.addArrangedSubview(mediumButton)
@@ -132,9 +137,15 @@ class MainViewController: UIViewController, ChangedColorProtocol {
         if let _ = SettingsModel.getPrevGame() {
             let alert = UIAlertController(title: "Do you want to start new Game?", message: "You have game that don't finished", preferredStyle: .actionSheet)
             let actionYes = UIAlertAction(title: "Yes", style: .default, handler: {_ in
-                let game = GameViewController(levelGame: sender.titleLabel?.text ?? "Ban")
-                ProfileModel.countUpGameStarted(sender.titleLabel?.text ?? "")
-                self.navigationController?.pushViewController(game, animated: true)
+                if (sender.titleLabel?.text == "Custom") {
+                    let custom = CustomGameCreateViewController()
+                    custom.delegate = self
+                    self.navigationController?.present(custom, animated: true)
+                } else {
+                    let game = GameViewController(levelGame: sender.titleLabel?.text ?? "Ban")
+                    ProfileModel.countUpGameStarted(sender.titleLabel?.text ?? "")
+                    self.navigationController?.pushViewController(game, animated: true)
+                }
             })
             let actionNo = UIAlertAction(title: "No", style: .destructive, handler: {_ in
                 self.levelGameButtons.isHidden.toggle()
@@ -144,9 +155,15 @@ class MainViewController: UIViewController, ChangedColorProtocol {
             alert.addAction(actionNo)
             navigationController?.present(alert, animated: true)
         } else {
-            let game = GameViewController(levelGame: sender.titleLabel?.text ?? "Ban")
-            ProfileModel.countUpGameStarted(sender.titleLabel?.text ?? "")
-            navigationController?.pushViewController(game, animated: true)
+            if (sender.titleLabel?.text == "Custom") {
+                let custom = CustomGameCreateViewController()
+                custom.delegate = self
+                self.navigationController?.present(custom, animated: true)
+            } else {
+                let game = GameViewController(levelGame: sender.titleLabel?.text ?? "Ban")
+                ProfileModel.countUpGameStarted(sender.titleLabel?.text ?? "")
+                navigationController?.pushViewController(game, animated: true)
+            }
         }
     }
     

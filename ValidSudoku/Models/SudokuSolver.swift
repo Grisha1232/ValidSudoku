@@ -85,6 +85,37 @@ class SudokuSolver {
         !isNumOkInSquare(row, col, row - row % 3, col - col % 3, num)
     }
     
+    public func countSoln(number: inout Int) {
+        var row = 0, col = 0
+        if (!findEmptyPlace(row: &row, col: &col)) {
+            number += 1
+            return
+        }
+        for i in 0..<9 {
+            if (number >= 2) {
+                break
+            }
+            if (isValidPlace(row: row, col: col, num: randNumb[i])) {
+                matrix[row][col] = randNumb[i];
+                
+                countSoln(number: &number);
+            }
+            matrix[row][col] = 0;
+        }
+    }
+    
+    public func checkMatrixOnCorrection() -> Bool {
+        var result = true;
+        for i in 0..<9 {
+            for j in 0..<9 {
+                if (matrix[i][j] != 0) {
+                    result = result && !isNumOkInSquare(i, j, i - i % 3, j - j % 3, matrix[i][j]) && !isNumOkInCol(i, j, matrix[i][j]) && !isNumOkInRow(i, j, matrix[i][j])
+                }
+            }
+        }
+        return result
+    }
+    
     /// Checking is number in the column
     private func isNumInCol(col: Int, num: Int) -> Bool {
         for i in 0..<9 {
@@ -161,25 +192,6 @@ class SudokuSolver {
         }
         print("difficult: \(difficult), needed: \(neededDifficult)")
         return matrix
-    }
-    
-    private func countSoln(number: inout Int) {
-        var row = 0, col = 0
-        if (!findEmptyPlace(row: &row, col: &col)) {
-            number += 1
-            return
-        }
-        for i in 0..<9 {
-            if (number >= 2) {
-                break
-            }
-            if (isValidPlace(row: row, col: col, num: randNumb[i])) {
-                matrix[row][col] = randNumb[i];
-                
-                countSoln(number: &number);
-            }
-            matrix[row][col] = 0;
-        }
     }
     
     private func checkOnlyPlaceForNumInCol(_ arr: [Int], _ num: Int, _ col: Int) -> (row: Int, col: Int) {

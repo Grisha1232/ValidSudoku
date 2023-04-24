@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C30481EF29F669C500C3BBA9 /* CustromGameCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30481EE29F669C500C3BBA9 /* CustromGameCreateViewController.swift */; };
+		C30481F129F68AFE00C3BBA9 /* CreateCustomGameProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30481F029F68AFE00C3BBA9 /* CreateCustomGameProtocol.swift */; };
 		C32CB4AA29B1FACE00EBF0C0 /* GameSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32CB4A929B1FACE00EBF0C0 /* GameSaver.swift */; };
 		C32CB4AC29B1FAF800EBF0C0 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32CB4AB29B1FAF800EBF0C0 /* GameState.swift */; };
 		C32CB4AE29B1FE6700EBF0C0 /* FieldState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32CB4AD29B1FE6700EBF0C0 /* FieldState.swift */; };
@@ -44,6 +46,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C30481EE29F669C500C3BBA9 /* CustromGameCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustromGameCreateViewController.swift; sourceTree = "<group>"; };
+		C30481F029F68AFE00C3BBA9 /* CreateCustomGameProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCustomGameProtocol.swift; sourceTree = "<group>"; };
 		C32CB4A929B1FACE00EBF0C0 /* GameSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSaver.swift; sourceTree = "<group>"; };
 		C32CB4AB29B1FAF800EBF0C0 /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
 		C32CB4AD29B1FE6700EBF0C0 /* FieldState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldState.swift; sourceTree = "<group>"; };
@@ -145,6 +149,7 @@
 				C382B7EF297545CF002A07AB /* SettingsViewController.swift */,
 				C382B7F429756FE0002A07AB /* GameViewController.swift */,
 				C382B7F8297576E1002A07AB /* ProfileViewController.swift */,
+				C30481EE29F669C500C3BBA9 /* CustromGameCreateViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -195,6 +200,7 @@
 				C3D18CFA29959479008A4CAC /* setSelectionProtocol.swift */,
 				C32CB4AF29B23EC400EBF0C0 /* SaveBeforeExitProtocol.swift */,
 				C3D1FFDF29BBD45E00578075 /* appendBeforeResingProtocol.swift */,
+				C30481F029F68AFE00C3BBA9 /* CreateCustomGameProtocol.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -291,6 +297,7 @@
 				C37806B929801C8B000947EB /* GameFieldView.swift in Sources */,
 				C382B7DC2975411B002A07AB /* ValidSudoku.xcdatamodeld in Sources */,
 				C3C958A92983E6CF0091B377 /* setNumbersProtocol.swift in Sources */,
+				C30481F129F68AFE00C3BBA9 /* CreateCustomGameProtocol.swift in Sources */,
 				C3C958A72983DC4A0091B377 /* cellTappedProtocol.swift in Sources */,
 				C32CB4AC29B1FAF800EBF0C0 /* GameState.swift in Sources */,
 				C360DE1C298B33B200D5A192 /* UISwitcher+changeColor.swift in Sources */,
@@ -299,6 +306,7 @@
 				C3E244F829BCE3B700C51C5A /* UIWindow+changeColor.swift in Sources */,
 				C360DE11298B26A800D5A192 /* UIColor+extentions.swift in Sources */,
 				C360DE13298B26C700D5A192 /* Data+extention.swift in Sources */,
+				C30481EF29F669C500C3BBA9 /* CustromGameCreateViewController.swift in Sources */,
 				C382B7F0297545CF002A07AB /* SettingsViewController.swift in Sources */,
 				C367FC38298CEB8400516A1F /* GeneratorOfMatrix.swift in Sources */,
 			);
