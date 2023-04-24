@@ -22,7 +22,7 @@ class ProfileModel {
         case "Hard":
             countUpHardGameStarted()
             break;
-        case "Expert":
+        case "Custom":
             countUpCustomGameStarted()
             break;
         default:
@@ -81,7 +81,7 @@ class ProfileModel {
         case "Hard":
             countUpHardGameWon()
             break;
-        case "Expert":
+        case "Custom":
             countUpCustomGameWon()
             break;
         default:
@@ -163,7 +163,7 @@ class ProfileModel {
         case "Hard":
             countUpHardGameWinWithNoMistakes()
             break;
-        case "Expert":
+        case "Custom":
             countUpCustomGameWinWithNoMistakes()
             break;
         default:
@@ -249,7 +249,7 @@ class ProfileModel {
         case "Hard":
             hardGameUpdateTime(seconds)
             break;
-        case "Expert":
+        case "Custom":
             customGameUpdateTime(seconds)
             break;
         default:

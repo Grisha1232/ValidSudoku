@@ -27,7 +27,7 @@ class ProfileViewController: UIViewController {
     private let easyButtonFilter = UIButton.makeStackViewButton(levelFilter: "easy")
     private let mediumButtonFilter = UIButton.makeStackViewButton(levelFilter: "medium")
     private let hardButtonFilter = UIButton.makeStackViewButton(levelFilter: "hard")
-    private let expertButtonFilter = UIButton.makeStackViewButton(levelFilter: "expert")
+    private let customButtonFilter = UIButton.makeStackViewButton(levelFilter: "custom")
     private var filtersSet: [Bool] = [true, true, true, true]
     
     override func viewDidLoad() {
@@ -62,11 +62,11 @@ class ProfileViewController: UIViewController {
         easyButtonFilter.addTarget(self, action: #selector(easyButtonTapped(_:)), for: .touchUpInside)
         mediumButtonFilter.addTarget(self, action: #selector(mediumButtonTapped(_:)), for: .touchUpInside)
         hardButtonFilter.addTarget(self, action: #selector(hardButtonTapped(_:)), for: .touchUpInside)
-        expertButtonFilter.addTarget(self, action: #selector(expertButtonTapped(_:)), for: .touchUpInside)
+        customButtonFilter.addTarget(self, action: #selector(customButtonTapped(_:)), for: .touchUpInside)
         SVFilterButtons.addArrangedSubview(easyButtonFilter)
         SVFilterButtons.addArrangedSubview(mediumButtonFilter)
         SVFilterButtons.addArrangedSubview(hardButtonFilter)
-        SVFilterButtons.addArrangedSubview(expertButtonFilter)
+        SVFilterButtons.addArrangedSubview(customButtonFilter)
         
         SVFilterButtons.axis = .horizontal
         SVFilterButtons.distribution = .equalSpacing
@@ -265,13 +265,13 @@ class ProfileViewController: UIViewController {
         refreshStats()
     }
     
-    @objc private func expertButtonTapped(_ sender: UIButton) {
+    @objc private func customButtonTapped(_ sender: UIButton) {
         if (filtersSet[3] && countFiltersIsOnt() != 1) {
             filtersSet[3] = false;
-            expertButtonFilter.setTitleColor(.secondaryLabel, for: .normal)
+            customButtonFilter.setTitleColor(.secondaryLabel, for: .normal)
         } else {
             filtersSet[3] = true;
-            expertButtonFilter.setTitleColor(SettingsModel.getMainColor(), for: .normal)
+            customButtonFilter.setTitleColor(SettingsModel.getMainColor(), for: .normal)
         }
         refreshStats()
     }
