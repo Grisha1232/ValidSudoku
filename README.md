@@ -25,3 +25,4 @@ This application contains:
 
 # Game page
 <img width="565" alt="Screen Shot 2023-04-24 at 15 27 16" src="https://user-images.githubusercontent.com/58052549/233995926-5935e5e3-ec11-4bcd-bbbe-d9c97f1ccd44.png">
+<img width="565" alt="Screen Shot 2023-04-24 at 15 28 44" src="https://user-images.githubusercontent.com/58052549/233996192-a6fddaa2-ea81-4ffb-bbfb-a95cdc6de0ad.png">
