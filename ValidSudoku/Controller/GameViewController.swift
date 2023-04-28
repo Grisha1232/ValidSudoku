@@ -164,12 +164,14 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         (toolsStackView.subviews[3].subviews[1] as! UILabel).text = "hint \(hintsCount)/3"
     }
     
-    internal func pauseTimer() {
-        timer?.suspend()
-    }
-    
-    internal func resumeTimer() {
-        timer?.resume()
+    internal func failedToLoadAd() {
+        let alert = UIAlertController(title: "We cannot load the ad", message: "In order to get one hint please connect to the internet", preferredStyle: .alert)
+        self.present(alert, animated: true, completion: nil)
+        
+        let when = DispatchTime.now() + 2
+        DispatchQueue.main.asyncAfter(deadline: when){
+          alert.dismiss(animated: true, completion: nil)
+        }
     }
     
     // MARK: - Setup UI functions
@@ -395,9 +397,14 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
             ProfileModel.countUpWinWithMoMistakes(levelGame)
         }
         navigationController?.popViewController(animated: true)
-        let alert = UIAlertController(title: "Win!", message: "Time: \(Int(seconds) / 60):\(Int(seconds) % 60 < 10 ? "0" : "" )\(Int(seconds) % 60)\nMistakes: \(mistakes)", preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Ok", style: .cancel))
+        let alert = UIAlertController(title: "Win!", message: "Time: \(Int(seconds) / 60):\(Int(seconds) % 60 < 10 ? "0" : "" )\(Int(seconds) % 60)\nMistakes: \(mistakes)", preferredStyle: .alert)
         navigationController?.present(alert, animated: true)
+        
+        
+        let when = DispatchTime.now() + 2
+        DispatchQueue.main.asyncAfter(deadline: when){
+            alert.dismiss(animated: true, completion: nil)
+        }
     }
     
     private func gameOverWithoutLoose() {
@@ -413,8 +420,13 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         ProfileModel.countCurrentWinStreak(false)
         navigationController?.popViewController(animated: true)
         let alert = UIAlertController(title: "Loose(", message: "", preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Ok", style: .cancel))
         navigationController?.present(alert, animated: true)
+        
+        
+        let when = DispatchTime.now() + 2
+        DispatchQueue.main.asyncAfter(deadline: when){
+            alert.dismiss(animated: true, completion: nil)
+        }
     }
     
     

@@ -36,6 +36,7 @@ class MainViewController: UIViewController, ChangedColorProtocol, CreateCustomGa
     
     internal func customGameCreate(field: [[Int]], answer: [[Int]]) {
         let game = GameViewController(field: field, answer: answer)
+        ProfileModel.countUpGameStarted("Custom")
         navigationController?.pushViewController(game, animated: true)
     }
     
@@ -114,10 +115,6 @@ class MainViewController: UIViewController, ChangedColorProtocol, CreateCustomGa
         continueGameButton.addTarget(self, action: #selector(tappedContinueButton(_:)), for: .touchUpInside)
         continueGameButton.pin(to: view, [.left: 16, .right: 16])
         continueGameButton.pinBottom(to: view.safeAreaLayoutGuide.bottomAnchor, 16)
-    }
-    
-    private func loadAdBeforeGame() {
-        
     }
     
     

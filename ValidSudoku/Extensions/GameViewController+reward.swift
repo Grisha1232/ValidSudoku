@@ -21,6 +21,7 @@ extension GameViewController: YMARewardedAdDelegate {
     }
         
     func rewardedAdDidFail(toLoad rewardedAd: YMARewardedAd, error: Error) {
+        self.failedToLoadAd()
         print("Loading failed. Error: %@", error)
     }
 
@@ -66,7 +67,6 @@ extension GameViewController: YMARewardedAdDelegate {
 extension GameViewController: YMAInterstitialAdDelegate {
     func interstitialAdDidLoad(_ interstitialAd: YMAInterstitialAd) {
         print("add loaded")
-        self.pauseTimer()
         interstitialAd.present(from: self)
     }
     
@@ -76,6 +76,5 @@ extension GameViewController: YMAInterstitialAdDelegate {
     
     func interstitialAdDidDisappear(_ interstitialAd: YMAInterstitialAd) {
         print("ad closed")
-        self.resumeTimer()
     }
 }
