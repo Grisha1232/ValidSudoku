@@ -72,6 +72,7 @@ class SettingsViewController: UIViewController, ChangedColorProtocol {
         }
         settingsView.backgroundColor = SettingsModel.getSecondaryBackgroundColor()
         colorSchemeView.backgroundColor = SettingsModel.getSecondaryBackgroundColor()
+        howToPlayView.backgroundColor = SettingsModel.getSecondaryBackgroundColor()
         colorSchemeBtn.setTitleColor(SettingsModel.getMainColor(), for: .normal)
         settingsBtn.setTitleColor(SettingsModel.getSecondaryLabelColor(), for: .normal)
         howToPlayBtn.setTitleColor(SettingsModel.getSecondaryLabelColor(), for: .normal)
@@ -92,6 +93,10 @@ class SettingsViewController: UIViewController, ChangedColorProtocol {
         (colorSchemeView.subviews[0].subviews[1] as! UILabel).textColor = SettingsModel.getSecondaryLabelColor()
         colorSchemeView.subviews[0].subviews[0].backgroundColor = SettingsModel.getMainBackgroundColor()
         (colorSchemeView.subviews[0].subviews[0].subviews[0] as! UILabel).textColor = SettingsModel.getMainLabelColor()
+        
+        
+        howToPlayView.subviews[0].backgroundColor = SettingsModel.getSecondaryBackgroundColor()
+        (howToPlayView.subviews[0] as! UITextView).tintColor = SettingsModel.getMainLabelColor()
         
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: SettingsModel.getMainLabelColor()]
     }
@@ -244,7 +249,25 @@ class SettingsViewController: UIViewController, ChangedColorProtocol {
     /// Set HowToPlay View
     private func setupHowToPlayView() {
         view.addSubview(howToPlayView)
+        let mainText = UITextView()
+        mainText.text = SettingsModel.textHowToPlay
         howToPlayView.isHidden = true
+        howToPlayView.backgroundColor = SettingsModel.getSecondaryBackgroundColor()
+        
+        howToPlayView.addSubview(mainText)
+        
+        howToPlayView.pin(to: view, [.left, .right])
+        howToPlayView.pinBottom(to: view.bottomAnchor)
+        howToPlayView.pinTop(to: tabStackView.bottomAnchor, 16)
+        
+        mainText.isEditable = false
+        mainText.showsVerticalScrollIndicator = false
+        mainText.backgroundColor = SettingsModel.getSecondaryBackgroundColor()
+        mainText.pin(to: howToPlayView, [.left: 16, .right: 16, .top: 0, .bottom: 0])
+        mainText.tintColor = SettingsModel.getSecondaryLabelColor()
+        mainText.isScrollEnabled = true
+        mainText.font = .systemFont(ofSize: 20)
+        
     }
     
     
