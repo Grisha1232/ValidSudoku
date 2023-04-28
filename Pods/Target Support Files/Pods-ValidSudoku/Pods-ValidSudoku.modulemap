@@ -1,0 +1,6 @@
+module Pods_ValidSudoku {
+  umbrella header "Pods-ValidSudoku-umbrella.h"
+
+  export *
+  module * { export * }
+}

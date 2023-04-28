@@ -51,6 +51,13 @@ class CustomGameCreateViewController: UIViewController , ChangedColorProtocol, S
         setupField()
         
         setupEraseButton()
+        
+        for row in field.getPreFilled() {
+            for elem in row {
+                print(elem, terminator: " ")
+            }
+            print("")
+        }
     }
     
     private func setupCreateButton() {
@@ -178,6 +185,14 @@ class CustomGameCreateViewController: UIViewController , ChangedColorProtocol, S
     }
     
     @objc private func numberTapped(_ sender: UIButton) {
+        print("---------------")
+        for i in 0...8 {
+            for j in 0...8 {
+                print(field.getMatrix()[i][j], field.getPreFilled()[i][j], separator: " ", terminator: "  ")
+            }
+            print("")
+        }
+        print("---------------")
         if (selectedCol != -1 && selectedRow != -1) {
             field.setFieldMatrix(gameSquare: selectedSquare!, row: selectedRow, col: selectedCol, num: sender.tag)
             

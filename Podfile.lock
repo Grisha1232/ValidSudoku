@@ -1,0 +1,86 @@
+PODS:
+  - DivKit (23.0.0):
+    - DivKit_Base (= 23.0.0)
+    - DivKit_BaseTiny (= 23.0.0)
+    - DivKit_BaseUI (= 23.0.0)
+    - DivKit_CommonCore (= 23.0.0)
+    - DivKit_LayoutKit (= 23.0.0)
+    - DivKit_LayoutKitInterface (= 23.0.0)
+    - DivKit_Networking (= 23.0.0)
+    - DivKit_Serialization (= 23.0.0)
+    - DivKit_TemplatesSupport (= 23.0.0)
+  - DivKit_Base (23.0.0):
+    - DivKit_BaseTiny (= 23.0.0)
+    - DivKit_BaseUI (= 23.0.0)
+  - DivKit_BaseTiny (23.0.0)
+  - DivKit_BaseUI (23.0.0):
+    - DivKit_BaseTiny (= 23.0.0)
+  - DivKit_CommonCore (23.0.0):
+    - DivKit_Base (= 23.0.0)
+    - DivKit_BaseTiny (= 23.0.0)
+  - DivKit_LayoutKit (23.0.0):
+    - DivKit_BaseTiny (= 23.0.0)
+    - DivKit_BaseUI (= 23.0.0)
+    - DivKit_CommonCore (= 23.0.0)
+    - DivKit_LayoutKitInterface (= 23.0.0)
+  - DivKit_LayoutKitInterface (23.0.0):
+    - DivKit_Base (= 23.0.0)
+    - DivKit_BaseTiny (= 23.0.0)
+    - DivKit_BaseUI (= 23.0.0)
+  - DivKit_Networking (23.0.0):
+    - DivKit_Base (= 23.0.0)
+  - DivKit_Serialization (23.0.0):
+    - DivKit_CommonCore (= 23.0.0)
+  - DivKit_TemplatesSupport (23.0.0):
+    - DivKit_CommonCore (= 23.0.0)
+    - DivKit_Serialization (= 23.0.0)
+  - YandexMobileAds (5.6.0):
+    - DivKit (~> 23.0.0)
+    - YandexMobileAds/Static (= 5.6.0)
+  - YandexMobileAds/Static (5.6.0):
+    - DivKit (~> 23.0.0)
+    - YandexMobileMetrica (< 5.0.0, >= 4.0.0)
+  - YandexMobileMetrica (4.5.0):
+    - YandexMobileMetrica/Static (= 4.5.0)
+  - YandexMobileMetrica/Static (4.5.0):
+    - YandexMobileMetrica/Static/Core (= 4.5.0)
+    - YandexMobileMetrica/Static/Crashes (= 4.5.0)
+  - YandexMobileMetrica/Static/Core (4.5.0)
+  - YandexMobileMetrica/Static/Crashes (4.5.0):
+    - YandexMobileMetrica/Static/Core
+
+DEPENDENCIES:
+  - YandexMobileAds (= 5.6.0)
+
+SPEC REPOS:
+  trunk:
+    - DivKit
+    - DivKit_Base
+    - DivKit_BaseTiny
+    - DivKit_BaseUI
+    - DivKit_CommonCore
+    - DivKit_LayoutKit
+    - DivKit_LayoutKitInterface
+    - DivKit_Networking
+    - DivKit_Serialization
+    - DivKit_TemplatesSupport
+    - YandexMobileAds
+    - YandexMobileMetrica
+
+SPEC CHECKSUMS:
+  DivKit: a0ae65a835c7c7ab57595844517dbf4707dea7ed
+  DivKit_Base: 1f56458a6964d2eb7bba08ab65b90abde547f984
+  DivKit_BaseTiny: 22db27db78dcbb6afadd00199e33974b5ca65aa7
+  DivKit_BaseUI: 374842b973afec7d6c4e94377b1e5e952859bc00
+  DivKit_CommonCore: dfdddd4c4d3d8137fe3975c160ca25bbb311065c
+  DivKit_LayoutKit: 7a8e427999988f0ad1f513f80a316c6fff31554e
+  DivKit_LayoutKitInterface: 1bc438c4fe6fd0e4ab44800533fd1bdaf80dc7e8
+  DivKit_Networking: 2d683b2c3af0e1a3734158980b2461c3758eda26
+  DivKit_Serialization: c691fede4f435a5a6b68b8eab06e3b485b2ad366
+  DivKit_TemplatesSupport: e4d4c8c3f04d5629703021f6284e4b4602afcfb2
+  YandexMobileAds: a5639e961470e70baf48bc5de1804d80af495382
+  YandexMobileMetrica: 7dafc7d224077d4443ab3a587b82b24e9b6cc9c7
+
+PODFILE CHECKSUM: b0b6fc1928f907a8e32b1a3cb0cc471ad82f6063
+
+COCOAPODS: 1.12.1

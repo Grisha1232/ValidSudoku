@@ -174,6 +174,10 @@ final class GameFieldView: UIView, CellTappedProtocol, setNumbersProtocol {
         fieldMatrix
     }
     
+    public func getPreFilled() -> [[Bool]] {
+        preFilled
+    }
+    
     internal func showMistakesAfterGame() {
         for i in 0...8 {
             for j in 0...8 {
@@ -381,7 +385,7 @@ final class GameFieldView: UIView, CellTappedProtocol, setNumbersProtocol {
                             let gameSquare = collectionViewSquares.cellForItem(at: IndexPath(row: j / 3, section: i / 3)) as! GameFieldSquare
                             let cell = gameSquare.collectionViewCells.cellForItem(at: IndexPath(row: j % 3, section: i % 3)) as! cellWithNumber
                             fieldNoteMatrix[i][j]?[num] = false
-                            cell.configureNumber(numb: 0, filled: false, note: fieldNoteMatrix[i][j])
+                            cell.configureNumber(numb: 0, filled: preFilled[i][j], note: fieldNoteMatrix[i][j])
                         }
                     }
                 }

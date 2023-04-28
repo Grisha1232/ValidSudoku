@@ -163,6 +163,7 @@ final class cellWithNumber: UICollectionViewCell, ChangedColorProtocol {
     public func configureNumber(numb: Int, filled: Bool, note: [Bool]?) {
         if (filled) {
             preFilled = true
+            isCorrectNumb = true
             if (numb != 0) {
                 numberLabel.text = String(numb)
             } else {
@@ -203,7 +204,9 @@ final class cellWithNumber: UICollectionViewCell, ChangedColorProtocol {
                 numberLabel.text = ""
             } else {
                 numberLabel.text = String(numb)
-                numberLabel.textColor = SettingsModel.getMainColor()
+                if (!preFilled) {
+                    numberLabel.textColor = SettingsModel.getMainColor()
+                }
                 for i in 0...8 {
                     noteNumbersLabel[i].isHidden = true
                 }

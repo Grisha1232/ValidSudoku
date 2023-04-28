@@ -7,12 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9DA224F87DCAEDA8B9CC9073 /* libPods-ValidSudoku.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2044918BFCEC5A3596CF305C /* libPods-ValidSudoku.a */; };
 		C30481EF29F669C500C3BBA9 /* CustromGameCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30481EE29F669C500C3BBA9 /* CustromGameCreateViewController.swift */; };
 		C30481F129F68AFE00C3BBA9 /* CreateCustomGameProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30481F029F68AFE00C3BBA9 /* CreateCustomGameProtocol.swift */; };
 		C32CB4AA29B1FACE00EBF0C0 /* GameSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32CB4A929B1FACE00EBF0C0 /* GameSaver.swift */; };
 		C32CB4AC29B1FAF800EBF0C0 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32CB4AB29B1FAF800EBF0C0 /* GameState.swift */; };
 		C32CB4AE29B1FE6700EBF0C0 /* FieldState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32CB4AD29B1FE6700EBF0C0 /* FieldState.swift */; };
 		C32CB4B029B23EC400EBF0C0 /* SaveBeforeExitProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32CB4AF29B23EC400EBF0C0 /* SaveBeforeExitProtocol.swift */; };
+		C331CC5329FBC02600FA160C /* GameViewController+reward.swift in Sources */ = {isa = PBXBuildFile; fileRef = C331CC5229FBC02600FA160C /* GameViewController+reward.swift */; };
 		C360DE0F298B248700D5A192 /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C360DE0E298B248700D5A192 /* SettingsModel.swift */; };
 		C360DE11298B26A800D5A192 /* UIColor+extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C360DE10298B26A800D5A192 /* UIColor+extentions.swift */; };
 		C360DE13298B26C700D5A192 /* Data+extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = C360DE12298B26C700D5A192 /* Data+extention.swift */; };
@@ -46,12 +48,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2044918BFCEC5A3596CF305C /* libPods-ValidSudoku.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ValidSudoku.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		972E4D4B0353ABAAE79E134B /* Pods-ValidSudoku.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ValidSudoku.release.xcconfig"; path = "Target Support Files/Pods-ValidSudoku/Pods-ValidSudoku.release.xcconfig"; sourceTree = "<group>"; };
 		C30481EE29F669C500C3BBA9 /* CustromGameCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustromGameCreateViewController.swift; sourceTree = "<group>"; };
 		C30481F029F68AFE00C3BBA9 /* CreateCustomGameProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCustomGameProtocol.swift; sourceTree = "<group>"; };
 		C32CB4A929B1FACE00EBF0C0 /* GameSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSaver.swift; sourceTree = "<group>"; };
 		C32CB4AB29B1FAF800EBF0C0 /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
 		C32CB4AD29B1FE6700EBF0C0 /* FieldState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldState.swift; sourceTree = "<group>"; };
 		C32CB4AF29B23EC400EBF0C0 /* SaveBeforeExitProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveBeforeExitProtocol.swift; sourceTree = "<group>"; };
+		C331CC5229FBC02600FA160C /* GameViewController+reward.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GameViewController+reward.swift"; sourceTree = "<group>"; };
 		C360DE0E298B248700D5A192 /* SettingsModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
 		C360DE10298B26A800D5A192 /* UIColor+extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+extentions.swift"; sourceTree = "<group>"; };
 		C360DE12298B26C700D5A192 /* Data+extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+extention.swift"; sourceTree = "<group>"; };
@@ -84,6 +89,7 @@
 		C3D866F329801FD000CA336D /* GameFieldSquare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameFieldSquare.swift; sourceTree = "<group>"; };
 		C3D866F52980236200CA336D /* CellWithNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellWithNumber.swift; sourceTree = "<group>"; };
 		C3E244F729BCE3B700C51C5A /* UIWindow+changeColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+changeColor.swift"; sourceTree = "<group>"; };
+		CE873EC8D6BB0BA41081FBFC /* Pods-ValidSudoku.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ValidSudoku.debug.xcconfig"; path = "Target Support Files/Pods-ValidSudoku/Pods-ValidSudoku.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,12 +97,22 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9DA224F87DCAEDA8B9CC9073 /* libPods-ValidSudoku.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BCBE868733400FF9AB4EF678 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				CE873EC8D6BB0BA41081FBFC /* Pods-ValidSudoku.debug.xcconfig */,
+				972E4D4B0353ABAAE79E134B /* Pods-ValidSudoku.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		C360DE16298B26FB00D5A192 /* ForSaving */ = {
 			isa = PBXGroup;
 			children = (
@@ -113,6 +129,8 @@
 			children = (
 				C382B7D02975411B002A07AB /* ValidSudoku */,
 				C382B7CF2975411B002A07AB /* Products */,
+				BCBE868733400FF9AB4EF678 /* Pods */,
+				CD08717ECA880A1D69AA7F8B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -187,6 +205,7 @@
 				C360DE16298B26FB00D5A192 /* ForSaving */,
 				C360DE1B298B33B200D5A192 /* UISwitcher+changeColor.swift */,
 				C3E244F729BCE3B700C51C5A /* UIWindow+changeColor.swift */,
+				C331CC5229FBC02600FA160C /* GameViewController+reward.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -205,6 +224,14 @@
 			path = Protocols;
 			sourceTree = "<group>";
 		};
+		CD08717ECA880A1D69AA7F8B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2044918BFCEC5A3596CF305C /* libPods-ValidSudoku.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -212,9 +239,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C382B7E52975411E002A07AB /* Build configuration list for PBXNativeTarget "ValidSudoku" */;
 			buildPhases = (
+				58A177AD303A792882F1F5AB /* [CP] Check Pods Manifest.lock */,
 				C382B7CA2975411B002A07AB /* Sources */,
 				C382B7CB2975411B002A07AB /* Frameworks */,
 				C382B7CC2975411B002A07AB /* Resources */,
+				44A96D01957B9701D519B8C1 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -270,6 +299,48 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		44A96D01957B9701D519B8C1 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ValidSudoku/Pods-ValidSudoku-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ValidSudoku/Pods-ValidSudoku-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ValidSudoku/Pods-ValidSudoku-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		58A177AD303A792882F1F5AB /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ValidSudoku-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		C382B7CA2975411B002A07AB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -284,6 +355,7 @@
 				C382B7D22975411B002A07AB /* AppDelegate.swift in Sources */,
 				C382B7D42975411B002A07AB /* SceneDelegate.swift in Sources */,
 				C360DE1A298B2A0700D5A192 /* changedColorProtocol.swift in Sources */,
+				C331CC5329FBC02600FA160C /* GameViewController+reward.swift in Sources */,
 				C32CB4AE29B1FE6700EBF0C0 /* FieldState.swift in Sources */,
 				C382B7F9297576E1002A07AB /* ProfileViewController.swift in Sources */,
 				C39C637C2987DECA00937D22 /* UIView+makeNewView.swift in Sources */,
@@ -443,6 +515,7 @@
 		};
 		C382B7E62975411E002A07AB /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE873EC8D6BB0BA41081FBFC /* Pods-ValidSudoku.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -475,6 +548,7 @@
 		};
 		C382B7E72975411E002A07AB /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 972E4D4B0353ABAAE79E134B /* Pods-ValidSudoku.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

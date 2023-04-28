@@ -6,15 +6,16 @@
 //
 
 import UIKit
+import YandexMobileAds
 
 // MARK: - MainViewController
 class MainViewController: UIViewController, ChangedColorProtocol, CreateCustomGameProtocol {
     
     
     // MARK: - Variables
-    let continueGameButton = UIButton.makeNewButton(title: "Continue")
-    let newGameButton = UIButton.makeNewButton(title: "New Game")
-    let levelGameButtons = UIStackView()
+    private let continueGameButton = UIButton.makeNewButton(title: "Continue")
+    private let newGameButton = UIButton.makeNewButton(title: "New Game")
+    private let levelGameButtons = UIStackView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -113,6 +114,10 @@ class MainViewController: UIViewController, ChangedColorProtocol, CreateCustomGa
         continueGameButton.addTarget(self, action: #selector(tappedContinueButton(_:)), for: .touchUpInside)
         continueGameButton.pin(to: view, [.left: 16, .right: 16])
         continueGameButton.pinBottom(to: view.safeAreaLayoutGuide.bottomAnchor, 16)
+    }
+    
+    private func loadAdBeforeGame() {
+        
     }
     
     

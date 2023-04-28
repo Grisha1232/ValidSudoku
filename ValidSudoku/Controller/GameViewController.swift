@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import CoreData
+import YandexMobileAds
 
 // MARK: - GameViewController
 class GameViewController: UIViewController, ChangedColorProtocol, SelectionProtocol, SaveBeforeExitProtocol {
@@ -15,10 +15,11 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
     // MARK: - Variables
     /// decription on the top of the game field
     private let descriptionStackView = UIStackView()
-    private var timer: Timer?
+    private var timer: DispatchSourceTimer?
     private var seconds: Double = 0
     private var levelGame: String
     private var mistakes: Int = 0
+    private var hintsCount: Int = 3
     
     /// Game field view
     private var gameField: GameFieldView
@@ -37,29 +38,49 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
     private var selectedCol: Int = -1
     private var selectedSquare: GameFieldSquare? = nil
     private var selectedPreFilled: Bool = true
+
+    
+    private var interstitialAd: YMAInterstitialAd!
+    private var rewardedAd: YMARewardedAd!
     
     // MARK: - init()
     init(levelGame: String?) {
         self.levelGame = levelGame ?? ""
         gameField = GameFieldView(levelGame: self.levelGame)
-        gameSaver = GameSaver(state: GameState(levelString: self.levelGame, mistakesCount: mistakes, timer: seconds, fieldState: gameField.saveGame()))
+        gameSaver = GameSaver(state: GameState(levelString: self.levelGame, mistakesCount: mistakes, hintsCount: hintsCount, timer: seconds, fieldState: gameField.saveGame()))
         super.init(nibName: nil, bundle: nil)
+        self.interstitialAd = YMAInterstitialAd(adUnitID: "demo-interstitial-yandex")
+        self.rewardedAd = YMARewardedAd(adUnitID: "demo-rewarded-yandex")
+        self.interstitialAd.delegate = self
+        self.rewardedAd.delegate = self
+        self.interstitialAd.load()
     }
     
     init(gameState: GameState) {
         self.levelGame = gameState.getLevel()
         self.seconds = gameState.getTimer()
         self.mistakes = gameState.getMistakes()
+        self.hintsCount = gameState.getHintsCount()
         self.gameField = GameFieldView(fieldState: gameState.getFieldState())
         self.gameSaver = GameSaver(state: gameState)
         super.init(nibName: nil, bundle: nil)
+        self.interstitialAd = YMAInterstitialAd(adUnitID: "demo-interstitial-yandex")
+        self.rewardedAd = YMARewardedAd(adUnitID: "demo-rewarded-yandex")
+        self.interstitialAd.delegate = self
+        self.rewardedAd.delegate = self
+        self.interstitialAd.load()
     }
     
     init(field fieldMatrix: [[Int]], answer anwerMatrix: [[Int]]) {
         self.levelGame = "Custom"
         self.gameField = GameFieldView(fieldMatrix: fieldMatrix, answerMatrix: anwerMatrix)
-        self.gameSaver = GameSaver(state: GameState(levelString: self.levelGame, mistakesCount: mistakes, timer: seconds, fieldState: gameField.saveGame()))
+        self.gameSaver = GameSaver(state: GameState(levelString: self.levelGame, mistakesCount: mistakes, hintsCount: hintsCount, timer: seconds, fieldState: gameField.saveGame()))
         super.init(nibName: nil, bundle: nil)
+        self.interstitialAd = YMAInterstitialAd(adUnitID: "demo-interstitial-yandex")
+        self.rewardedAd = YMARewardedAd(adUnitID: "demo-rewarded-yandex")
+        self.interstitialAd.delegate = self
+        self.rewardedAd.delegate = self
+        self.interstitialAd.load()
     }
     
     required init?(coder: NSCoder) {
@@ -75,6 +96,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        print("trying to show ad")
     }
     
     // MARK: - Control functions
@@ -131,12 +153,24 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
     
     internal func saveBeforeExitApp() {
         if (!gameField.isGameOver()) {
-            gameSaver.save(state: GameState(levelString: levelGame, mistakesCount: mistakes, timer: seconds, fieldState: gameField.saveGame()))
+            gameSaver.save(state: GameState(levelString: levelGame, mistakesCount: mistakes, hintsCount: hintsCount, timer: seconds, fieldState: gameField.saveGame()))
             SettingsModel.save(gameState: gameSaver.getPrevSave())
             gameField.changeColor()
         }
     }
     
+    internal func rewardAded() {
+        hintsCount += 1
+        (toolsStackView.subviews[3].subviews[1] as! UILabel).text = "hint \(hintsCount)/3"
+    }
+    
+    internal func pauseTimer() {
+        timer?.suspend()
+    }
+    
+    internal func resumeTimer() {
+        timer?.resume()
+    }
     
     // MARK: - Setup UI functions
     private func setupUI() {
@@ -146,8 +180,6 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         setupTools()
         setupGameField()
         setupDescriptions()
-        
-        
     }
     
     /// Set back and setting buttons and title
@@ -196,7 +228,12 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
         descriptionStackView.addArrangedSubview(mistakesCount)
         mistakesCount.setWidth((view.frame.width - 34) / 3)
         
-        timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(updateTimeLabel), userInfo: nil, repeats: true)
+        timer = DispatchSource.makeTimerSource(queue: .main)
+        timer?.schedule(deadline: .now(), repeating: 0.5)
+        timer?.setEventHandler { [weak self] in
+            self?.updateTimeLabel()
+        }
+        timer?.resume()
         let timerLabel = UILabel()
         timerLabel.text = "time: 0:00"
         timerLabel.textColor = SettingsModel.getMainLabelColor()
@@ -245,7 +282,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
                 toolLabel.text = "note"
                 button.addTarget(self, action: #selector(noteButtonTapped(_:)), for: .touchUpInside)
             } else {
-                toolLabel.text = "hint"
+                toolLabel.text = "hint \(hintsCount)/3"
                 button.addTarget(self, action: #selector(hintButtonTapped(_:)), for: .touchUpInside)
             }
             i += 1
@@ -260,8 +297,8 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
             toolLabel.pin(to: viewTool, [.bottom, .left, .right])
             button.pinBottom(to: toolLabel.topAnchor, 5)
             
-            button.setHeight(40)
-            viewTool.setWidth(45)
+            button.setHeight(45)
+            viewTool.setWidth(50)
             toolsStackView.addArrangedSubview(viewTool)
         }
         toolsStackView.spacing = 16
@@ -349,7 +386,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
     }
     
     private func gameOverWithWin() {
-        timer?.invalidate()
+        timer?.cancel()
         ProfileModel.countUpGameWon(levelGame)
         ProfileModel.countCurrentWinStreak(true)
         ProfileModel.updateTime(levelGame, seconds)
@@ -364,14 +401,14 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
     }
     
     private func gameOverWithoutLoose() {
-        timer?.invalidate()
+        timer?.cancel()
         navigationController?.popViewController(animated: true)
-        gameSaver.save(state: GameState(levelString: levelGame, mistakesCount: mistakes, timer: seconds, fieldState: gameField.saveGame()))
-        SettingsModel.save(gameState: gameSaver.getPrevSave() ?? GameState(levelString: "none", mistakesCount: 0, timer: 0, fieldState: FieldState(field: [], preFilled: [], answerMatrix: [], fieldNote: [])))
+        gameSaver.save(state: GameState(levelString: levelGame, mistakesCount: mistakes, hintsCount: hintsCount, timer: seconds, fieldState: gameField.saveGame()))
+        SettingsModel.save(gameState: gameSaver.getPrevSave() ?? GameState(levelString: "none", mistakesCount: 0, hintsCount: 3, timer: 0, fieldState: FieldState(field: [], preFilled: [], answerMatrix: [], fieldNote: [])))
     }
     
     private func gameOverWithLoose() {
-        timer?.invalidate()
+        timer?.cancel()
         SettingsModel.save(gameState: nil)
         ProfileModel.countCurrentWinStreak(false)
         navigationController?.popViewController(animated: true)
@@ -430,7 +467,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
                     (lineDigitsStackView.subviews[i] as! UIButton).setTitleColor(SettingsModel.isNoteOn() ? SettingsModel.getSecondaryLabelColor() : SettingsModel.getMainColor(), for: .normal)
                 }
             }
-            gameSaver.save(state: GameState(levelString: levelGame, mistakesCount: mistakes, timer: seconds, fieldState: gameField.saveGame()))
+            gameSaver.save(state: GameState(levelString: levelGame, mistakesCount: mistakes, hintsCount: hintsCount, timer: seconds, fieldState: gameField.saveGame()))
         }
     }
     
@@ -440,43 +477,49 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
     }
     
     @objc private func hintButtonTapped(_ sender: UIButton) {
-        if (SettingsModel.isNoteOn()) {
-            noteButtonTapped(toolsStackView.subviews[2].subviews[0] as! UIButton)
-        }
-        let answer: (num: Int, row: Int, col: Int)
-        if (gameField.isNoMistakesInMatrix()) {
-            answer = gameField.getHint()
+        if (hintsCount == 0) {
+            rewardedAd.load()
         } else {
-            gameField.getRidOfInccorections()
-            answer = gameField.getHint()
-        }
-        if (answer == (-1, -1, -1)) {
-            let alert = UIAlertController(title: "We are not so smart to give you a hint by logic(", message: "But we can fill the note for you", preferredStyle: .actionSheet)
-            navigationController?.present(alert, animated: true, completion: {
-                self.gameField.fillNotes()
-                self.gameSaver.save(state: GameState(levelString: self.levelGame, mistakesCount: self.mistakes, timer: self.seconds, fieldState: self.gameField.saveGame()))
-                sleep(1)
-                alert.dismiss(animated: true)
-            })
-            return
-        }
-        digitsCount = gameField.countDigitInMatrix()
-        var count = 0
-        for i in 0...8 {
-            if (digitsCount[i] == 9) {
-                count += 1
-                (lineDigitsStackView.subviews[i] as! UIButton).isEnabled = false
-                (lineDigitsStackView.subviews[i] as! UIButton).setTitleColor(SettingsModel.getSecondaryBackgroundColor(), for: .normal)
-            } else {
-                (lineDigitsStackView.subviews[i] as! UIButton).isEnabled = true
-                (lineDigitsStackView.subviews[i] as! UIButton).setTitleColor(SettingsModel.getMainColor(), for: .normal)
+            if (SettingsModel.isNoteOn()) {
+                noteButtonTapped(toolsStackView.subviews[2].subviews[0] as! UIButton)
             }
-        }
-        gameSaver.save(state: GameState(levelString: levelGame, mistakesCount: mistakes, timer: seconds, fieldState: gameField.saveGame()))
-        if (gameField.isGameOver() && gameField.isGameOverWithWin()) {
-            gameOver(isGameWon: true)
-        } else if (gameField.isGameOver() && !gameField.isGameOverWithWin()){
-            gameOver(isGameWon: false)
+            let answer: (num: Int, row: Int, col: Int)
+            if (gameField.isNoMistakesInMatrix()) {
+                answer = gameField.getHint()
+            } else {
+                gameField.getRidOfInccorections()
+                answer = gameField.getHint()
+            }
+            if (answer == (-1, -1, -1)) {
+                let alert = UIAlertController(title: "We are not so smart to give you a hint by logic(", message: "But we can fill the note for you", preferredStyle: .actionSheet)
+                navigationController?.present(alert, animated: true, completion: {
+                    self.gameField.fillNotes()
+                    self.gameSaver.save(state: GameState(levelString: self.levelGame, mistakesCount: self.mistakes, hintsCount: self.hintsCount, timer: self.seconds, fieldState: self.gameField.saveGame()))
+                    sleep(1)
+                    alert.dismiss(animated: true)
+                })
+                return
+            }
+            hintsCount -= 1
+            (toolsStackView.subviews[3].subviews[1] as! UILabel).text = "hint \(hintsCount)/3"
+            digitsCount = gameField.countDigitInMatrix()
+            var count = 0
+            for i in 0...8 {
+                if (digitsCount[i] == 9) {
+                    count += 1
+                    (lineDigitsStackView.subviews[i] as! UIButton).isEnabled = false
+                    (lineDigitsStackView.subviews[i] as! UIButton).setTitleColor(SettingsModel.getSecondaryBackgroundColor(), for: .normal)
+                } else {
+                    (lineDigitsStackView.subviews[i] as! UIButton).isEnabled = true
+                    (lineDigitsStackView.subviews[i] as! UIButton).setTitleColor(SettingsModel.getMainColor(), for: .normal)
+                }
+            }
+            gameSaver.save(state: GameState(levelString: levelGame, mistakesCount: mistakes, hintsCount: hintsCount, timer: seconds, fieldState: gameField.saveGame()))
+            if (gameField.isGameOver() && gameField.isGameOverWithWin()) {
+                gameOver(isGameWon: true)
+            } else if (gameField.isGameOver() && !gameField.isGameOverWithWin()){
+                gameOver(isGameWon: false)
+            }
         }
     }
     
@@ -495,7 +538,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
                     (lineDigitsStackView.subviews[i] as! UIButton).setTitleColor(SettingsModel.getMainColor(), for: .normal)
                 }
             }
-            gameSaver.save(state: GameState(levelString: levelGame, mistakesCount: mistakes, timer: seconds, fieldState: gameField.saveGame()))
+            gameSaver.save(state: GameState(levelString: levelGame, mistakesCount: mistakes, hintsCount: hintsCount, timer: seconds, fieldState: gameField.saveGame()))
             if (gameField.isGameOver() && gameField.isNoMistakesInMatrix()) {
                 gameOver(isGameWon: true)
             } else if (gameField.isGameOver() && !gameField.isNoMistakesInMatrix()){
@@ -503,7 +546,7 @@ class GameViewController: UIViewController, ChangedColorProtocol, SelectionProto
             }
         } else if (!selectedPreFilled && SettingsModel.isNoteOn() && selectedRow != -1) {
             gameField.setFieldMatrix(gameSquare: selectedSquare!, row: selectedRow, col: selectedCol, num: sender.tag)
-            gameSaver.save(state: GameState(levelString: levelGame, mistakesCount: mistakes, timer: seconds, fieldState: gameField.saveGame()))
+            gameSaver.save(state: GameState(levelString: levelGame, mistakesCount: mistakes, hintsCount: hintsCount, timer: seconds, fieldState: gameField.saveGame()))
         }
     }
     
