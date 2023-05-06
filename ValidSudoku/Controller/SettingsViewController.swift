@@ -39,10 +39,6 @@ class SettingsViewController: UIViewController, ChangedColorProtocol {
         setupUI()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-    
     init(isOpenedFromTheGame: Bool) {
         self.isOpenedfromTheGame = isOpenedFromTheGame
         super.init(nibName: nil, bundle: nil)

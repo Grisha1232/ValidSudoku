@@ -10,7 +10,8 @@
 /// Generator of matrix for sudoku field
 class GeneratorOfMatrix {
     
-    private static let defaultMatrix: [[Int]] = [[1, 2, 3, 4, 5, 6, 7, 8, 9],
+    private static let defaultMatrix: [[Int]] = [
+                                                [1, 2, 3, 4, 5, 6, 7, 8, 9],
                                                 [4, 5, 6, 7, 8, 9, 1, 2, 3],
                                                 [7, 8, 9, 1, 2, 3, 4, 5, 6],
                                                 [2, 3, 4, 5, 6, 7, 8, 9, 1],
@@ -18,7 +19,8 @@ class GeneratorOfMatrix {
                                                 [8, 9, 1, 2, 3, 4, 5, 6, 7],
                                                 [3, 4, 5, 6, 7, 8, 9, 1, 2],
                                                 [6, 7, 8, 9, 1, 2, 3, 4, 5],
-                                                [9, 1, 2, 3, 4, 5, 6, 7, 8]]
+                                                [9, 1, 2, 3, 4, 5, 6, 7, 8]
+                                                ]
     private static var matrix: [[Int]] = defaultMatrix
 
     /// get answer matrix (call it before calling function 'getMatrix(level: String)')

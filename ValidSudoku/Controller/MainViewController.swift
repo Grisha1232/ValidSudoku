@@ -30,10 +30,6 @@ class MainViewController: UIViewController, ChangedColorProtocol, CreateCustomGa
         }
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-    
     internal func customGameCreate(field: [[Int]], answer: [[Int]]) {
         let game = GameViewController(field: field, answer: answer)
         ProfileModel.countUpGameStarted("Custom")

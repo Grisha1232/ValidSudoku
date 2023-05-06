@@ -186,11 +186,9 @@ class SudokuSolver {
             
             if (difficult <= neededDifficult) {
                 print("nice")
-                print("difficult: \(difficult), needed: \(neededDifficult)")
                 break
             }
         }
-        print("difficult: \(difficult), needed: \(neededDifficult)")
         return matrix
     }
     
